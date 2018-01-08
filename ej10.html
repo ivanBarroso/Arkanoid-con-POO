@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Document</title>
+</head>
+<script>
+    
+window.onload = function () {
+    /*/Pintamos el tablero del juego
+    anchoCajaJuego = 600;
+    altoCajaJuego = 400;
+    */
+    contenedora = new Contenedora(600, 400, 0, 0, "#d6d6d6");
+
+    //Array de pelotas
+    arrayPelotas1 = new Array();
+    arrayLadrillos1 = new Array();  
+
+    arrayPelotas2 = new Array();
+    arrayLadrillos2 = new Array();  
+
+    new Pelota(20, contenedora.anchoCajaJuego/2 + 20, contenedora.altoCajaJuego/3, 1, 4, 5, true, false, true, "green", contenedora, arrayPelotas1);
+    new Pelota(30, contenedora.anchoCajaJuego/2 + 20, contenedora.altoCajaJuego/3, 1, 4, 5, true, false, true, "red", contenedora, arrayPelotas1);
+    new Pelota(40, contenedora.anchoCajaJuego/2 + 20, contenedora.altoCajaJuego/3, 1, 4, 5, true, false, true, "#f0f0f0", contenedora, arrayPelotas1);
+    new Pelota(50, contenedora.anchoCajaJuego/2 + 20, contenedora.altoCajaJuego/3, 1, 4, 5, true, false, true, "#ffff00", contenedora, arrayPelotas1);
+
+    new Ladrillo(100, 40, 50, 50, 3, 0, contenedora, arrayLadrillos1);
+    new Ladrillo(100, 40, 200, 50, 2, 1, contenedora, arrayLadrillos1);
+    new Ladrillo(100, 40, 350, 50, 1, 1, contenedora, arrayLadrillos1);
+
+    new Barra(150, 40, 200, 350, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora);
+
+    setInterval(function(){
+        mover(arrayPelotas1);
+        }, 10);
+    
+/*
+    contenedora1 = new Contenedora(600, 400, contenedora.anchoCajaJuego, 0, "#d6d6ff");
+    new Pelota(20, contenedora1.anchoCajaJuego/2, contenedora1.altoCajaJuego/2, 1, 4, 5, true, false, true, "red", contenedora1, arrayPelotas2);
+    new Pelota(20, contenedora1.anchoCajaJuego/2, contenedora1.altoCajaJuego/2, 1, 4, 5, true, false, true, "red", contenedora1, arrayPelotas2);
+    new Pelota(20, contenedora1.anchoCajaJuego/2, contenedora1.altoCajaJuego/2, 1, 4, 5, true, false, true, "red", contenedora1, arrayPelotas2);
+    new Pelota(20, contenedora1.anchoCajaJuego/2, contenedora1.altoCajaJuego/2, 1, 4, 5, true, false, true, "red", contenedora1, arrayPelotas2);
+    new Ladrillo(100, 40, 200, 50, 2, 1, contenedora1, arrayLadrillos2);
+    new Ladrillo(100, 40, 350, 50, 1, 1, contenedora1, arrayLadrillos2);
+    new Ladrillo(100, 40, 50, 50, 3, 0, contenedora1, arrayLadrillos2);
+    new Barra(100, 20, 200, 350, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora1);
+    setInterval(function(){
+        mover(arrayPelotas2);
+        }, 10);
+    contenedora2 = new Contenedora(600, 400, 0, contenedora1.altoCajaJuego, "#d6d6ff");
+    arrayPelotas3 = new Array();
+    arrayLadrillos3 = new Array();  
+    new Pelota(20, contenedora2.anchoCajaJuego/2, contenedora2.altoCajaJuego/2, 1, 4, 5, true, false, true, "red", contenedora2, arrayPelotas3);
+    new Pelota(20, contenedora2.anchoCajaJuego/2, contenedora2.altoCajaJuego/2, 1, 4, 5, true, false, true, "red", contenedora2, arrayPelotas3);
+    new Pelota(20, contenedora2.anchoCajaJuego/2, contenedora2.altoCajaJuego/2, 1, 4, 5, true, false, true, "red", contenedora2, arrayPelotas3);
+    new Pelota(20, contenedora2.anchoCajaJuego/2, contenedora2.altoCajaJuego/2, 1, 4, 5, true, false, true, "red", contenedora2, arrayPelotas3);
+
+    new Ladrillo(100, 40, 200, 50, 2, 1, contenedora2, arrayLadrillos3);
+    new Ladrillo(100, 40, 350, 50, 1, 1, contenedora2, arrayLadrillos3);
+    new Ladrillo(100, 40, 50, 50, 3, 0, contenedora2, arrayLadrillos3);
+    new Barra(270, 40, 200, 350, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora2);
+    
+    setInterval(function(){
+        mover(arrayPelotas3);
+        }, 10);
+        */
+}
+// - - - - - - - - - -     C L A S E     P E L O T A    - - - - - - - - - - - 
+
+function Pelota(anchoYalto, x, y, pasoX, pasoY, intervalo, derechaX, arribaY, estaEnMovimiento, color, contenedora, arrayPelotas) {
+    this.anchoYalto = anchoYalto;
+    this.radio = anchoYalto / 2;
+    this.x = x;
+    this.y = y;
+    this.pasoX = pasoX;
+    this.pasoY = pasoY;
+    this.intervalo = intervalo;
+    this.derechaX = derechaX;
+    this.arribaY = arribaY;
+    this.estaEnMovimiento = estaEnMovimiento;
+    this.color = color;
+    this.contenedora = contenedora;
+    this.arrayPelotas = arrayPelotas;
+    if(color != undefined)
+    {
+        this.color = color;
+    }
+    else
+    {
+        this.color = "#ff0000";
+    }
+    this.divPelota = this.crearPelota();
+    this.comprobarPosicion();
+    this.arrayPelotas.push(this);
+}
+//Metodos prototipados de pelota
+Pelota.prototype.crearPelota = function () {
+    var padre = this.contenedora.divContenedora;
+    var p = document.createElement("div");
+    p.style.width = this.anchoYalto + "px";
+    p.style.height = this.anchoYalto + "px";
+    p.style.borderRadius = "50%";
+    p.style.backgroundColor = this.color;
+    p.style.position = "absolute";
+    p.style.top = this.y + "px";
+    p.style.left = this.x + "px";
+    p.className = "pelota";
+    padre.appendChild(p);
+    return p;
+};
+Pelota.prototype.avanzarX = function () 
+{
+    if(this.derechaX)
+    {
+        this.x += this.pasoX;
+    }
+    else
+    {
+        this.x -= this.pasoX;
+    }
+    this.divPelota.style.left = this.x + "px";
+}
+Pelota.prototype.avanzarY = function () 
+{
+    if(this.arribaY)
+    {
+        this.y -= this.pasoY;
+    }
+    else
+    {
+        this.y += this.pasoY;
+    }    
+    this.divPelota.style.top = this.y + "px";
+}
+/*
+ * Aumenta 1/2 el tamaño de la bola
+ */
+Pelota.prototype.aumentarTamanio   = function () 
+{
+    this.anchoYalto = this.anchoYalto + this.anchoYalto * 0.5;
+    this.radio = this.anchoYalto/2;
+    this.divPelota.style.width =  this.anchoYalto + "px";
+    this.divPelota.style.height = this.anchoYalto + "px";
+}
+/*
+ * Reduce 1/2 el tamaño de la bola
+ */
+Pelota.prototype.reducirTamanio   = function () 
+{
+    this.anchoYalto = this.anchoYalto - this.anchoYalto * 0.5;
+    this.radio = this.anchoYalto/2;
+    this.divPelota.style.width =  this.anchoYalto  + "px";
+    this.divPelota.style.height = this.anchoYalto  + "px";
+}
+/*
+ * Evita que dos pelotas se pinten en la misma posicion y la va moviendo hasta que ya no colisionan
+ *
+ */
+Pelota.prototype.comprobarPosicion  = function () 
+{
+    var cenXBola1 = this.x + (this.radio);
+    var cenYBola1 = this.y + (this.radio);
+    for (var i = 0; i < this.arrayPelotas.length; i++) 
+    {
+        if(this.arrayPelotas[i] != this)
+        {
+            var cenXBola2 = this.arrayPelotas[i].x + (this.arrayPelotas[i].radio);
+            var cenYBola2 = this.arrayPelotas[i].y + (this.arrayPelotas[i].radio); 
+            var distanciaEntrePelotas = 0;
+            do
+            {
+                distanciaEntrePelotas = Math.hypot(cenXBola1 - cenXBola2, cenYBola1 - cenYBola2);
+                this.avanzarX();
+                this.avanzarY();
+                cenXBola1 = this.x + (this.radio);
+                cenYBola1 = this.y + (this.radio);
+            }
+            while( distanciaEntrePelotas <  this.radio + ((this.pasoX + this.pasoY) /2) + this.arrayPelotas[i].radio  + ((this.arrayPelotas[i].pasoX + this.arrayPelotas[i].pasoY) /2));
+        }
+    }
+}
+// - - - - - F I N    D E    L A   C L A S E    P E L O T A  - - - - - - -
+
+function mover(arrayPelotas) {
+    //Si solo hay una pelota
+    if(arrayPelotas.length <= 1)
+    {
+        comprobarColisionParedes(arrayPelotas[0]);
+        if(arrayPelotas[0].estaEnMovimiento)
+        {
+            arrayPelotas[0].avanzarY();
+            arrayPelotas[0].avanzarX();
+        }
+    }
+    //Si hay mas de una pelotas
+    else
+    {
+        //Pasamos por todas las pelotas
+        for (var i = 0; i < arrayPelotas.length; i++) 
+        {        
+            //comprobarColisionParedes(arrayPelotas[i]);
+
+            for(var j = 0; j < arrayPelotas.length; j++)
+            {
+                //EVITA QUE SE COMPRUEBE UNA PELOTA CON LA MISMA DEL ARRAY
+                if(arrayPelotas[i] != arrayPelotas[j])
+                {
+                    comprobarColisionPelotas(arrayPelotas[i], arrayPelotas[j]);
+                    comprobarColisionParedes(arrayPelotas[j]);
+
+                }
+            }
+            if(arrayPelotas[i].estaEnMovimiento)
+            {
+                arrayPelotas[i].avanzarY();
+                arrayPelotas[i].avanzarX();
+            }
+        }
+    }   
+}
+/*
+ *Comprueba si al moverse esa pelota colisionara con alguna de las paredes, en ese caso cambia el sentido de la pelota.
+ *
+ *
+ */
+function comprobarColisionParedes(pelota) {
+    //Choca arriba
+    if (pelota.y - pelota.pasoY <= 0 && pelota.arribaY) {
+        pelota.arribaY = false;
+    }
+    //Choca abajo
+    else if (pelota.pasoY + pelota.y > (pelota.contenedora.altoCajaJuego - pelota.anchoYalto) && !pelota.arribaY) {
+    pelota.arribaY = true;
+    }
+    //Choca derecha
+    if (pelota.pasoX + pelota.x >= (pelota.contenedora.anchoCajaJuego - pelota.anchoYalto) && pelota.derechaX) {
+        pelota.derechaX = !pelota.derechaX;
+    }
+    //Choca izquierda
+    else if (pelota.x - pelota.pasoX <= 0 && !pelota.derechaX) {
+        pelota.derechaX = !pelota.derechaX;
+    }
+}
+
+function comprobarColisionPelotas(pelota1, pelota2) 
+{
+    //Centros de la pelota 1
+    var cenXBola1 = pelota1.x + (pelota1.radio);
+    var cenYBola1 = pelota1.y + (pelota1.radio);
+    //Centros de la pelota 2
+    var cenXBola2 = pelota2.x + (pelota2.radio);
+    var cenYBola2 = pelota2.y + (pelota2.radio);
+    
+    distanciaEntrePelotas = Math.hypot(cenXBola1 - cenXBola2, cenYBola1 - cenYBola2);
+    //Si van a colisionar las pelotas en su siguiente paso
+    if (distanciaEntrePelotas <  pelota1.radio + ((pelota1.pasoX + pelota1.pasoY) /2) + pelota2.radio  + ((pelota2.pasoX + pelota2.pasoY) /2) + 1)
+    {
+        //alert("comprobando "+pelota1.color + " con "+pelota2.color + " distancia "+distanciaEntrePelotas + " tope " + (pelota1.radio + pelota2.radio) )
+        //si las dos avanzan hacia arriba o abajo  /\  \/
+        if(pelota1.arribaY == pelota2.arribaY && pelota1.derechaX != pelota2.derechaX)
+        {
+            //Si es la mas rapida cambiamos el sentido para que no la sobrepase
+            if(pelota1.pasoY >= pelota2.pasoY)
+            {
+                //pelota1.arribaY = !pelota1.arribaY;
+                pelota1.derechaX = !pelota1.derechaX;
+                pelota2.derechaX = !pelota1.derechaX;
+            }
+            else
+            {
+                pelota2.derechaX = !pelota2.derechaX;
+                pelota1.derechaX = !pelota2.derechaX;
+            }
+            //console.log("choque arriba abajo")
+        }
+        //si avanzan hacia la izquierda o derecha > <
+        else if(pelota1.derechaX == pelota2.derechaX && pelota1.arribaY != pelota2.arribaY)
+        {
+            //Si es la mas rapida cambiamos el sentido para que no la sobrepase
+            if(pelota1.pasoX >= pelota2.pasoX)
+            {
+                pelota1.arribaY = !pelota1.arribaY;
+                pelota1.derechaX = !pelota1.derechaX;
+                pelota2.arribaY = !pelota1.arribaY;
+            }
+            //console.log("choque izquierda o derecha")
+
+        }
+        //si avanzan en direccion contraria una contra otra | --
+        else if(pelota1.derechaX != pelota2.derechaX && pelota1.arribaY != pelota2.arribaY)
+        {
+            pelota1.arribaY = !pelota1.arribaY;
+            pelota1.derechaX = !pelota1.derechaX;
+
+            pelota2.arribaY = !pelota1.arribaY;
+            pelota2.derechaX = !pelota1.derechaX;
+            //console.log("choque contrario")
+        }
+        //Si avanzan en la misma direccion (distinta velocidad)
+        else
+        {
+            //console.log("choque misma direccion")
+            if(pelota1.pasoX + pelota1.pasoY >= pelota2.pasoY + pelota2.pasoX)
+            {
+                pelota1.arribaY = !pelota1.arribaY;
+                pelota1.derechaX = !pelota1.derechaX;
+            }
+            else
+            {
+                pelota2.derechaX = !pelota2.derechaX;
+            }
+        }
+        //Separamos las pelotas para que no sigan colisionando
+        pelota1.avanzarX();
+        pelota1.avanzarY();
+        pelota2.avanzarX();
+        pelota2.avanzarY();
+    }
+}
+// - - - - - - - - - -     C L A S E     L A D R I L L O    - - - - - - - - - - - 
+function Ladrillo(anchoLadrillo, altoLadrillo, posicionX, posicionY, vida, extra, contenedora, arrayLadrillos)
+{
+    this.anchoLadrillo = anchoLadrillo;
+    this.altoLadrillo = altoLadrillo;
+    this.posicionX = posicionX;
+    this.posicionY = posicionY;
+    this.vida = vida;
+    this.extra = 0;
+    this.contenedora = contenedora;
+    this.arrayLadrillos = arrayLadrillos;
+
+    //Si tiene algun extra
+    if(extra != undefined)
+    {
+        this.extra = extra;
+    }
+    this.divLadrillo = this.crearLadrillo();
+    this.arrayLadrillos.push(this);
+    
+    
+}
+Ladrillo.prototype.obtenerColor  = function () 
+{
+    var arrayColores = ["red", "green", "yellow", "purple"];
+    return arrayColores[this.vida];
+
+}
+Ladrillo.prototype.crearLadrillo  = function () 
+{
+    var ladrillo = document.createElement("div");
+    ladrillo.style.width = this.anchoLadrillo + "px";
+    ladrillo.style.height = this.altoLadrillo + "px";
+    ladrillo.style.position = "absolute";
+    ladrillo.className = "ladrillo";
+    ladrillo.style.left = this.posicionX + "px";
+    ladrillo.style.top = this.posicionY + "px";
+    ladrillo.style.backgroundColor = this.obtenerColor();
+    this.contenedora.divContenedora.appendChild(ladrillo);
+    return ladrillo;
+}
+Ladrillo.prototype.quitarVida  = function () 
+{
+    if(this.vida > 0)
+    {
+        this.vida--;
+        this.actualizarColor();
+    }
+    else
+    {
+        this.borrarLadrillo();
+    }
+}
+Ladrillo.prototype.actualizarColor  = function () 
+{
+    this.divLadrillo.style.backgroundColor = this.obtenerColor();
+}
+Ladrillo.prototype.borrarLadrillo  = function () 
+{
+    borrarElemento(this.divLadrillo);
+    arrayLadrillos.splice(arrayLadrillos.indexOf(this),1);
+}
+//- - - - - -  - - - - - -   F I N    D E    C L A S E    L A D R I L L O      - - - - - - - - 
+
+// - - - - - - - - - -     C L A S E     B A R R A     - - - - - - - - - - - 
+function Barra(anchoBarra, altoBarra, posicionX, posicionY, color, colorLinea, colorTrianguloCentro, colorTrianguloLados, contenedora)
+{
+    this.anchoBarra = anchoBarra;
+    this.altoBarra = altoBarra;
+    this.posicionX = posicionX;
+    this.posicionY = posicionY;
+    this.color = color;
+    this.colorLinea = colorLinea;
+    this.colorTrianguloCentro = colorTrianguloCentro;
+    this.colorTrianguloLados = colorTrianguloLados;
+    this.contenedora = contenedora;
+    this.divBarra = this.crearBarra();
+    this.divLineaBarra = this.crearLineaBarra();
+    this.crearTrianguloCentro = this.crearTrianguloCentro();
+    this.divTrianguloIzquierda = this.crearTrianguloIzquierda();
+    this.divTrianguloDerecha = this.crearTrianguloDerecha();
+
+}
+Barra.prototype.crearBarra  = function () 
+{
+    var barra = document.createElement("div");
+    barra.style.width = this.anchoBarra + "px";
+    barra.style.height = this.altoBarra + "px";
+    barra.style.position = "absolute";
+    barra.className = "barra";
+    barra.style.left = this.posicionX + "px";
+    barra.style.top = this.posicionY + "px";
+    barra.style.backgroundColor = this.color;
+    padre = this.contenedora.divContenedora;
+    padre.appendChild(barra);
+    return barra;
+}
+Barra.prototype.crearLineaBarra  = function () 
+{
+    var lineaBarra = document.createElement("div");
+    lineaBarra.style.width = "100%";
+    lineaBarra.style.height = "10%";
+    lineaBarra.style.position = "absolute";
+    lineaBarra.className = "lineaBarra";
+    lineaBarra.style.zIndex = -1;
+    lineaBarra.style.backgroundColor = this.colorLinea;
+    padre = this.contenedora.divContenedora;
+    this.divBarra.appendChild(lineaBarra);
+    return lineaBarra;
+}
+Barra.prototype.crearTrianguloCentro  = function () 
+{
+    var trianguloBarraCentro = document.createElement("div");
+    trianguloBarraCentro.style.width = "0px";
+    trianguloBarraCentro.style.height = "0px";
+    trianguloBarraCentro.style.borderRight= this.anchoBarra/10 +"px solid transparent";
+    trianguloBarraCentro.style.borderLeft= this.anchoBarra/10 +"px solid transparent";
+    trianguloBarraCentro.style.borderTop= this.anchoBarra/100 +"px solid transparent";
+    trianguloBarraCentro.style.borderBottom = this.altoBarra/2 +"px solid" + this.colorTrianguloCentro; 
+    
+    trianguloBarraCentro.style.position = "absolute";
+    //Centrarlo y ponerlo encima de la barra
+    trianguloBarraCentro.style.left = this.anchoBarra/2 - this.anchoBarra/10 + "px";
+    trianguloBarraCentro.style.top = -this.anchoBarra/100 - this.altoBarra/2+ "px";
+    trianguloBarraCentro.className = "trianguloBarraCentro";
+    trianguloBarraCentro.style.zIndex = -1;
+    padre = document.getElementById("contenedor");
+    this.divBarra.appendChild(trianguloBarraCentro);
+    return trianguloBarraCentro;
+}
+Barra.prototype.crearTrianguloIzquierda  = function () 
+{
+    var trianguloBarraIzquierda = document.createElement("div");
+    trianguloBarraIzquierda.style.width = "0px";
+    trianguloBarraIzquierda.style.height = "0px";
+    trianguloBarraIzquierda.style.borderRight= this.anchoBarra/10 +"px solid transparent";
+    trianguloBarraIzquierda.style.borderLeft= this.anchoBarra/10 +"px solid transparent";
+    trianguloBarraIzquierda.style.borderTop= this.anchoBarra/100 +"px solid transparent";
+    trianguloBarraIzquierda.style.borderBottom = this.altoBarra/2 +"px solid" + this.colorTrianguloLados; 
+    
+    trianguloBarraIzquierda.style.position = "absolute";
+    //Poner a la izquierda y ponerlo encima de la barra
+    trianguloBarraIzquierda.style.left = 0 + "px";
+    trianguloBarraIzquierda.style.top = -this.anchoBarra/100 - this.altoBarra/2+ "px";
+    trianguloBarraIzquierda.className = "trianguloBarraIzquierda";
+    trianguloBarraIzquierda.style.zIndex = -1;
+    padre = document.getElementById("contenedor");
+    this.divBarra.appendChild(trianguloBarraIzquierda);
+    return trianguloBarraIzquierda;
+}
+Barra.prototype.crearTrianguloDerecha  = function () 
+{
+    var trianguloBarraIzquierda = document.createElement("div");
+    trianguloBarraIzquierda.style.width = "0px";
+    trianguloBarraIzquierda.style.height = "0px";
+    trianguloBarraIzquierda.style.borderRight= this.anchoBarra/10 +"px solid transparent";
+    trianguloBarraIzquierda.style.borderLeft= this.anchoBarra/10 +"px solid transparent";
+    trianguloBarraIzquierda.style.borderTop= this.anchoBarra/100 +"px solid transparent";
+    trianguloBarraIzquierda.style.borderBottom = this.altoBarra/2 +"px solid" + this.colorTrianguloLados; 
+    
+    trianguloBarraIzquierda.style.position = "absolute";
+    //Poner a la izquierda y ponerlo encima de la barra
+    trianguloBarraIzquierda.style.left = this.anchoBarra - (this.anchoBarra/5) + "px";
+    trianguloBarraIzquierda.style.top = -this.anchoBarra/100 - this.altoBarra/2+ "px";
+    trianguloBarraIzquierda.className = "trianguloBarraIzquierda";
+    trianguloBarraIzquierda.style.zIndex = -1;
+    padre = document.getElementById("contenedor");
+    this.divBarra.appendChild(trianguloBarraIzquierda);
+    return trianguloBarraIzquierda;
+}
+//- - - - - -  - - - - - -   F I N    D E    C L A S E    B A R R A      - - - - - - - - 
+
+// - - - - - - - - - -     C L A S E     A R K A N O I D     - - - - - - - - - - - 
+function Arkanoid()
+{
+
+}
+//- - - - - -  - - - - - -   F I N    D E    C L A S E    A R K A N O I D      - - - - - - - - 
+
+// - - - - - - - - - -     C L A S E     C O N T E N E D O R A     - - - - - - - - - - - 
+function Contenedora(anchoCajaJuego, altoCajaJuego, posicionX, posicionY, colorFondo)
+{
+    this.anchoCajaJuego = anchoCajaJuego;
+    this.altoCajaJuego = altoCajaJuego;
+    this.posicionX =posicionX;
+    this.posicionY = posicionY;
+    this.colorFondo = colorFondo;
+    this.divContenedora = this.crearContenedora();
+}
+Contenedora.prototype.crearContenedora  = function () 
+{
+    var padre = document.body;
+    var con = document.createElement("div");
+    con.style.position = "absolute";
+    con.style.left = this.posicionX + "px";
+    con.style.top = this.posicionY + "px";
+    con.style.width = this.anchoCajaJuego + "px";
+    con.style.height = this.altoCajaJuego + "px";
+    con.style.backgroundColor = this.colorFondo;
+    con.className = "contenedora";
+    con.style.cssFloat = "left";
+    padre.appendChild(con);
+    return con;
+}
+//- - - - - -  - - - - - -   F I N    D E    C L A S E    C O N T E N E D O R A      - - - - - - - - 
+
+//METODOS QUE USAN VARIOS OBJETOS
+
+function borrarElemento(elemento)
+{
+    if(elemento.parentNode != null)
+    {
+        elemento.parentNode.removeChild(elemento);
+    }
+}
+</script>
+
+<body>
+
+</body>
+
+</html>

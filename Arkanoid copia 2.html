@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Arkanoid</title>
+
+<noscript>Lo siento es necesario un navegador con javascript para poder ejecutar todo el contenido</noscript>
+<style>
+body
+{
+  margin: auto;
+}
+#contenedor
+{
+    background-color: aqua;
+    margin: auto;
+    float: left;
+    position: relative;
+
+}
+#informacion
+{
+    position: relative;
+    float: left;
+    background-color: #dab92a;
+}
+#debug
+{
+    background-color: #e1d1fe;
+    margin: 7px;
+    float: left;
+}
+span
+{
+    font-size: 20px;
+}
+</style>
+
+</head>
+<body>
+    <div id="contenedor"></div>
+    <div id="informacion">
+      <div id="debug">
+        <span>Raton X:</span><br />
+        <span>Raton Y:</span><br />
+        <span>Dir. X:</span><br />
+        <span>Dir. Y:</span><br />
+        <span>Click X:</span><br />
+        <span>Click Y:</span><br />
+        <span>Distancia bola a base:</span><br />
+        <span>centx pelota:</span><br />
+        <span>cenx base:</span><br />
+      </div>
+    <div id="debug">
+        <span id="posicionX"></span><br />
+        <span id="posicionY"></span><br />
+        <span id="direccionX"></span><br />
+        <span id="direccionY"></span><br />
+        <span id="ratonX"></span><br />
+        <span id="ratonY"></span><br />
+        <span id="distancia"></span><br />
+        <span id="cenxpelota"></span><br />
+        <span id="cenxbase"></span><br />
+      </div>
+    </div>
+    
+</body>
+
+<script type="text/javascript">
+
+//Juego iniciado
+juegoIniciado = false;
+
+//Nivel del juego
+nivelActual = 0;
+NUMERO_LADRILLOS_FILA = 11;
+
+
+//Configuracion de movimientos
+  velocidad = 1;
+  derechaX = true;
+  arribaY = true;
+  estaEnMovimiento = false;
+  intervalo = null;
+
+  pasoXPelota = 2;
+  pasoYpelota = 2;
+  
+
+  //Configuracion entorno, 
+  anchoLargoBola = 10;
+
+  //Borde de ambas cajas
+  bordeCajas = 15;
+
+  //Caja del arkanoid
+  anchoCajaJuego = 600;
+  altoCajaJuego = 700;
+  
+  //Panel lateral con informacion
+  anchoCajaInformacion = 300;
+  altoCajaInformacion = altoCajaJuego;
+
+  //Ladrillos
+  altoLadrillo = 20;
+  anchoLadrillo = 45;
+
+  //Variables de la base
+  anchobase = 120;
+  altobase = 25;
+
+
+window.onload = function()
+{
+  //contenedor de la pelota
+  contenedorPelota = document.getElementById("contenedor");
+  contenedorPelota.style.width = anchoCajaJuego + "px";
+  contenedorPelota.style.height = altoCajaJuego + "px";
+  contenedorPelota.style.border = "solid " + bordeCajas + "px" + " red" ; 
+
+  //Div informacion
+  contenedorInformacion = document.getElementById("informacion");
+  contenedorInformacion.style.width = anchoCajaInformacion + "px";
+  contenedorInformacion.style.height = altoCajaInformacion + "px";
+  contenedorInformacion.style.border = "solid " + bordeCajas +"px" + " yellow" ;
+
+  //Array con los colores de ladrillos
+  colores = new Array("red", "yellow", "green", "purple");
+
+  //Array con los niveles 
+  niveles = new Array();
+
+  //Array nivel 1
+  nivel1 = new Array(
+    [0,0,0,0,0,2,0,0,0,0,1],
+    [1,0,1,0,0,2,0,0,1,0,1],
+    [1,0,1,2,2,3,2,2,1,0,1],
+    [1,0,1,0,0,2,0,0,1,0,1],
+    [1,0,1,0,0,2,0,0,1,0,1],
+  );
+  niveles.push(nivel1);
+
+  
+
+  //Creamos los ladrillos en el nivel actual
+  crearLadrillos(nivelActual);
+
+  //Creamos la base 
+  base = crearBase();
+
+  //Creamos la pelota
+  pelota = crearPelota(); 
+
+  //span que muestran los datos de la pelota
+  spPosicionX = document.getElementById("posicionX");
+  spPosicionY = document.getElementById("posicionY");
+  spdireccionX = document.getElementById("direccionX");
+  spdireccionY = document.getElementById("direccionY");
+  spratonX = document.getElementById("ratonX");
+  spratonY = document.getElementById("ratonY");
+  distancia = document.getElementById("distancia");
+  cenxpelota = document.getElementById("cenxpelota");
+  cenxbase = document.getElementById("cenxbase");
+
+  //Eventos que controlamos
+  document.onmousemove = comprobarRaton;
+	document.onkeypress = comprobarTecla;
+  contenedorPelota.onclick = comprobarClick;
+
+  //Lista de ladrillos
+  ladrillos = document.getElementsByClassName("ladrillo");
+}
+
+function crearPelota()
+{
+	pelota = document.createElement("div");
+	pelota.style.width = anchoLargoBola + "px";
+	pelota.style.height = anchoLargoBola + "px";
+	pelota.style.borderRadius = "50px";
+	pelota.style.backgroundColor ="#ff0509";
+  pelota.style.position = "absolute";
+	pelota.style.top = parseInt(base.style.top) - anchoLargoBola + "px";
+	pelota.style.left = parseInt(base.style.left) + (anchobase/ 2) - (anchoLargoBola/2) + "px";
+
+	contenedorPelota.appendChild(pelota);
+	return pelota;
+}
+
+function crearLadrillos(nivel)
+{
+  posicionY = 9;
+  posicionX = 9;
+  nivelAPintar = niveles[nivel];
+  for (var i = 0; i < nivelAPintar.length; i++) 
+  {
+    for (var j = 0; j < NUMERO_LADRILLOS_FILA; j++) 
+    {
+        ladrillo = document.createElement("div");
+        ladrillo.style.width = anchoLadrillo + "px";
+        ladrillo.style.height = altoLadrillo + "px";
+        ladrillo.style.position = "absolute";
+
+        ladrillo.style.left = posicionX + "px";
+        ladrillo.style.top = posicionY + "px";
+
+        posicionX += anchoLadrillo + 9;
+        if(posicionX > anchoCajaJuego)
+        {
+          posicionY += altoLadrillo + 9;
+          posicionX = 9;
+        }
+        
+        /*ladrillo.style.margin = 5.27 + "px";
+        ladrillo.style.float = "left";
+        alert(ladrillo.style.left);*/
+        ladrillo.style.backgroundColor = colores[nivelAPintar[i][j]];
+
+      if(nivelAPintar[i][j] >= 0)
+      {
+        ladrillo.className = "ladrillo";
+      }
+        contenedorPelota.appendChild(ladrillo);
+    }
+  }
+}
+
+function comprobarTecla(elEvento)
+{
+	var evento = window.event || elEvento;
+
+	if(evento.charCode == 32)
+	{
+    if(!juegoIniciado)
+    {
+      juegoIniciado = true;
+      intervalo = setInterval(function(){mover(pelota)}, velocidad);
+      estaEnMovimiento= true;
+    }
+	}
+  if (String.fromCharCode(evento.charCode) == "p")
+  {
+    if(!estaEnMovimiento && juegoIniciado)
+    {
+      intervalo = setInterval(function(){mover(pelota)}, velocidad);
+      estaEnMovimiento= true;
+    }
+    else
+    {
+      clearInterval(intervalo);
+      estaEnMovimiento = false;
+    }
+  }
+}
+
+
+function mover(p)
+{
+  pelota = p;
+  y = parseInt(pelota.style.top);
+  x = parseInt(pelota.style.left);
+
+  //Comprueba si hay colision con las paredes y cambia la direccion de la bola
+  comprobarColision(x, y);
+
+  if (arribaY)
+  {
+    spdireccionY.innerHTML = "arriba";
+    pelota.style.top = (y - pasoYpelota) + "px";
+  }
+  else
+  {
+    spdireccionY.innerHTML = "abajo";
+    pelota.style.top = (y + pasoYpelota) + "px";
+  }
+
+  if (derechaX)
+  {
+    spdireccionX.innerHTML = "derecha";
+    pelota.style.left = (x + pasoXPelota) + "px";
+  }
+  else
+  {
+    spdireccionX.innerHTML = "izquierda";
+    pelota.style.left = (x - pasoXPelota) + "px";
+  }
+
+  //Actualizamos los datos de los span
+  //spPosicionX.innerHTML = x + " px";
+  //spPosicionY.innerHTML = y + " px";
+}
+
+function comprobarColision(x, y)
+{
+  //Choca arriba
+  if (y <= 0 )
+  {
+    arribaY = false;
+  }
+  //Choca abajo
+  else if (y  >= (altoCajaJuego - anchoLargoBola))
+  {
+    arribaY = !arribaY;
+  }
+  //Choca derecha
+  else if (x >= (anchoCajaJuego - anchoLargoBola))
+  {
+    derechaX = !derechaX;
+  }
+  //Choca izquierda
+  else if (x <= 0 )
+  {
+    derechaX = !derechaX;
+  }
+
+
+  //Comprobar si choca con la base
+  var baseY = parseInt(base.style.top)
+  var baseX = parseInt(base.style.left)
+
+  /**borrar despues **/
+  var cenXBola = x + (anchoLargoBola/2);
+  var cenYBola = y + (anchoLargoBola/2);
+  var baseCenX = baseX + (anchobase / 2);
+  var baseCenY = baseY + (altobase / 2);
+
+  //cenxpelota.innerHTML = (cenXBola + ", "+cenYBola);
+  //cenxbase.innerHTML = (baseCenX + ", "+baseCenY);
+
+  radioBola = anchoLargoBola / 2;
+  //Comprobar si la bola toca la parse superior del rectangulo
+  for(var i = baseX; i< baseX + anchobase; i+=5)
+  {
+    distanciaBolaBase = Math.hypot(cenXBola - i, cenYBola - baseY);
+    //Si colisiona
+    if(distanciaBolaBase < radioBola && !arribaY)
+    {
+      // Entre 0 - 10%
+      if(i >= baseX && i <= baseX + (anchobase)/10)
+      {
+        modificarPasoX(2);
+        derechaX = !derechaX;
+      }
+      //Entre el 10 y el 30
+      else if(i > baseX + ((anchobase)/10)*2 && i < baseX + ((anchobase)/10)*3)
+      {
+        modificarPasoX(1);
+      }
+      //Entre el 30 al 70
+      else if(i > baseX + ((anchobase)/10)*3 && i < baseX + ((anchobase)/10)*7)
+      {
+        modificarPasoX(-1);
+      }
+      else if(i > baseX + ((anchobase)/10)*7 && i < baseX + ((anchobase)/10)*8)
+      {
+        modificarPasoX(1);
+      }
+      else
+      {
+        modificarPasoX(2);
+        derechaX = !derechaX;
+      }
+      
+      pelota.style.top = baseY - anchoLargoBola + "px";
+      arribaY = true;
+      break;
+    }
+  }
+
+  function modificarPasoX(numero)
+  {
+    if(pasoXPelota + numero > 4)
+    {
+      pasoXPelota = 4;
+    }
+    else if(pasoXPelota + numero < 1)
+    {
+      pasoXPelota = 1;
+    }
+    else{
+      pasoXPelota = numero;
+    }
+  }
+  //Comprobar si choca con ladrillos
+  for( var i = 0; i< ladrillos.length; i++)
+  {
+    comprobarChoqueLadrillo(ladrillos[i]);
+  }
+}
+
+function comprobarChoqueLadrillo(ladrilloActual)
+{
+  //Variables que usa la funcion:
+  //Variables elemento con el que colisiona la pelota
+  var x = parseInt(ladrilloActual.style.left);
+  var y = parseInt(ladrilloActual.style.top); 
+  var xDerecha = x + anchoLadrillo;
+  var yAbajo = y + altoLadrillo;
+
+  //Variables de la pelota
+  var pelotaX = parseInt(pelota.style.left);
+  var pelotaY = parseInt(pelota.style.top);
+  var pelotaXderecha = pelotaX + anchoLargoBola;
+  var pelotaYAbajo = pelotaY + anchoLargoBola;
+
+  var cenXBola = pelotaX + (anchoLargoBola/2);
+  var cenYBola = pelotaY + (anchoLargoBola/2);
+
+
+  for(var i = x; i< x + anchoLadrillo; i+=5)
+  {
+    distanciaBolaElemento = Math.hypot(cenXBola - i, cenYBola - y - altoLadrillo);
+    //Si colisiona en la parte inferior
+    if(distanciaBolaElemento < radioBola && arribaY)
+    { 
+      //Corregir posicion
+      pelotaY = yAbajo + "px";
+      arribaY = false;
+      borrarElemento(ladrilloActual)
+      break;
+    }
+    //Si colisiona en la parte superior
+    distanciaBolaElemento = Math.hypot(cenXBola - i, cenYBola - y);
+    if(distanciaBolaElemento < radioBola && !arribaY)
+    { 
+      arribaY = !arribaY;
+      borrarElemento(ladrilloActual)
+      break;
+    }
+  }
+  for(var i = y; i< yAbajo; i+=3)
+  {
+    distanciaBolaElemento = Math.hypot(cenYBola - i, cenXBola - x);
+    //Si colisiona en la parte derecha
+    if(distanciaBolaElemento < radioBola)
+    { 
+      //Corregir posicion
+      pelotaX = xDerecha + 1 + "px";
+      derechaX = !derechaX;
+      borrarElemento(ladrilloActual)
+      break;
+    }
+    //Si choca en la izquierda
+    distanciaBolaElemento = Math.hypot(cenYBola - i+anchoLadrillo, cenXBola - x + anchoLadrillo);
+    if(distanciaBolaElemento < radioBola)
+    { 
+      //Corregir posicion
+      pelotaX = x -1 + "px";
+      derechaX = !derechaX;
+      borrarElemento(ladrilloActual)
+      break;
+    }
+  }
+
+
+}
+
+function borrarElemento(elemento)
+{
+    elemento.parentNode.removeChild(elemento);
+}
+
+function comprobarClick(elEvento)
+{
+  /*var evento = window.event || elEvento;
+  var coordenadaX = evento.clientX;
+  var coordenadaY = evento.clientY;
+  spratonX.innerHTML = coordenadaX;
+  spratonY.innerHTML = coordenadaY;
+
+  xPelota = parseInt(pelota.style.left) + anchoLargoBola;
+  if (coordenadaX >= xPelota)
+  {
+
+    clearInterval(intervalo);
+    setTimeout(function(){
+      contenedorPelota.style.opacity = 0.5;
+    }, 0);
+    setTimeout(function(){
+      contenedorPelota.style.opacity = 1;
+    }, 300);
+  }*/
+}
+function crearBase()
+  {
+    base = document.createElement("div");
+    base.style.backgroundColor = "green";
+    base.style.width = anchobase + "px";
+    base.style.height = altobase + "px";
+    base.style.position = "absolute";
+    base.style.className = "base";
+    console.log((anchoCajaJuego / 2) + "px");
+    console.log(altoCajaJuego - altobase - 30 + "px");
+    base.style.left = (anchoCajaJuego / 2) - (anchobase/2)  + "px";
+    base.style.top = altoCajaJuego - altobase - 30 + "px";
+    contenedorPelota.appendChild(base);
+    return base;
+  }
+
+  function comprobarRaton(elEvento)
+  {
+    var evento = window.event || elEvento;
+    var coordenadaX = evento.clientX;
+    var coordenadaY = evento.clientY;
+
+    spPosicionX.innerHTML = coordenadaX + " px";
+    spPosicionY.innerHTML = coordenadaY + " px";
+
+    base.style.left = coordenadaX - (bordeCajas) - (anchobase / 2) + "px";
+    if( (parseInt(base.style.left) <= (0)))
+    {
+      base.style.left = 0 + "px";
+    }
+    else if( (parseInt(base.style.left) + anchobase >= anchoCajaJuego))
+    {
+      base.style.left = anchoCajaJuego - anchobase + "px";
+    }
+
+    /*if( !juegoIniciado );
+    {
+      console.log(parseInt(pelota.style.left) +" es igual "+(anchobase / 2));
+      pelota.style.left = parseInt(base.style.left) + (anchobase/ 2) - (anchoLargoBola/2) + "px";
+    }*/
+  }
+
+</script>
+
+
+</html>
