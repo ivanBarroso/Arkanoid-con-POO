@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <title>Document</title>
+<script type="text/javascript" src="niveles.js"></script>
 </head>
 <script>
 
@@ -13,7 +14,8 @@ window.onload = function () {
     anchoCajaJuego = 600;
     altoCajaJuego = 400;
     */
-    contenedora = new Contenedora(600, 400, 0, 0, "#d6d6d6");
+    
+    contenedora = new Contenedora(50, 100, 0, 0, "#d6d6d6");
 
     //Array de pelotas
     arrayPelotas1 = new Array();
@@ -22,35 +24,52 @@ window.onload = function () {
     arrayPelotas2 = new Array();
     arrayLadrillos2 = new Array();  
 
+
+    new Pelota(20, 0 + 20, 100, 1, 4, 5, true, false, true, "red", contenedora, arrayPelotas1);
+    new Pelota(30, 0 + 20, 200, 1, 4, 5, true, false, true, "blue", contenedora, arrayPelotas1);
+    new Pelota(40, 0 + 20, 300, 1, 4, 5, true, false, true, "#f0f0f0", contenedora, arrayPelotas1);
+    new Pelota(50, 0 + 20, 400, 1, 4, 5, true, false, true, "#ffff00", contenedora, arrayPelotas1);
+
     
-    new Pelota(20, contenedora.anchoCajaJuego/2 + 20, contenedora.altoCajaJuego/3, 1, 4, 5, true, false, true, "red", contenedora, arrayPelotas1);
-    new Pelota(30, contenedora.anchoCajaJuego/2 + 20, contenedora.altoCajaJuego/3, 1, 4, 5, true, false, true, "blue", contenedora, arrayPelotas1);
-    new Pelota(40, contenedora.anchoCajaJuego/2 + 20, contenedora.altoCajaJuego/3, 1, 4, 5, true, false, true, "#f0f0f0", contenedora, arrayPelotas1);
-    new Pelota(50, contenedora.anchoCajaJuego/2 + 20, contenedora.altoCajaJuego/3, 1, 4, 5, true, false, true, "#ffff00", contenedora, arrayPelotas1);
+    var posicionInicial = contenedora.posicionX + 1;
+    var separacion = 1;
+    var altoInicial = 3;
+    console.log(niveles[0].nivel1.length)
+    for (var i = 0; i<niveles.length;i++) 
+    {
+        for (var j = 0; j<niveles.nivel1.linea.length;j++) 
+        {
+            if(posicionInicial + 8 > 100)
+            {
+                altoInicial+=6;
+                posicionInicial = contenedora.posicionX +1;
+            }
+            new Ladrillo(8, 5, posicionInicial, altoInicial, niveles[i].linea[j], 0, contenedora, arrayLadrillos1);
+            posicionInicial+= 9;
+        }
+    }
+   
 
-    new Ladrillo(100, 40, 50, 50, 3, 0, contenedora, arrayLadrillos1);
-    new Ladrillo(100, 40, 200, 50, 2, 1, contenedora, arrayLadrillos1);
-    new Ladrillo(100, 40, 350, 50, 1, 1, contenedora, arrayLadrillos1);
-
-    new Barra(150, 40, 200, 350, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora);
+    new Barra(150, 40, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora);
 
     setInterval(function(){
         mover(arrayPelotas1);
         }, 10);
     
-/*
-    contenedora1 = new Contenedora(600, 400, contenedora.anchoCajaJuego, 0, "#d6d6ff");
+        
+    contenedora1 = new Contenedora(50, 100, window.innerWidth*contenedora.anchoCajaJuego/100, 0, "#d6d6ff");
     new Pelota(20, contenedora1.anchoCajaJuego/2, contenedora1.altoCajaJuego/2, 1, 4, 5, true, false, true, "red", contenedora1, arrayPelotas2);
     new Pelota(20, contenedora1.anchoCajaJuego/2, contenedora1.altoCajaJuego/2, 1, 4, 5, true, false, true, "red", contenedora1, arrayPelotas2);
     new Pelota(20, contenedora1.anchoCajaJuego/2, contenedora1.altoCajaJuego/2, 1, 4, 5, true, false, true, "red", contenedora1, arrayPelotas2);
     new Pelota(20, contenedora1.anchoCajaJuego/2, contenedora1.altoCajaJuego/2, 1, 4, 5, true, false, true, "red", contenedora1, arrayPelotas2);
-    new Ladrillo(100, 40, 200, 50, 2, 1, contenedora1, arrayLadrillos2);
-    new Ladrillo(100, 40, 350, 50, 1, 1, contenedora1, arrayLadrillos2);
-    new Ladrillo(100, 40, 50, 50, 3, 0, contenedora1, arrayLadrillos2);
+    
+   
+    
     new Barra(100, 20, 200, 350, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora1);
     setInterval(function(){
         mover(arrayPelotas2);
         }, 10);
+        /*
     contenedora2 = new Contenedora(600, 400, 0, contenedora1.altoCajaJuego, "#d6d6ff");
     arrayPelotas3 = new Array();
     arrayLadrillos3 = new Array();  
@@ -229,15 +248,15 @@ function mover(arrayPelotas) {
  */
 function comprobarColisionParedes(pelota) {
     //Choca arriba
-    if (pelota.y - pelota.pasoY <= 0 && pelota.arribaY) {
+    if (pelota.y - pelota.pasoY <= this.contenedora.posicionX && pelota.arribaY) {
         pelota.arribaY = false;
     }
     //Choca abajo
-    else if (pelota.pasoY + pelota.y > (pelota.contenedora.altoCajaJuego - pelota.anchoYalto) && !pelota.arribaY) {
+    else if (pelota.pasoY + pelota.y > (window.innerHeight * (pelota.contenedora.altoCajaJuego/100) - pelota.anchoYalto) && !pelota.arribaY) {
     pelota.arribaY = true;
     }
     //Choca derecha
-    if (pelota.pasoX + pelota.x >= (pelota.contenedora.anchoCajaJuego - pelota.anchoYalto) && pelota.derechaX) {
+    if (pelota.pasoX + pelota.x >= (window.innerWidth* (contenedora.anchoCajaJuego/100) - pelota.anchoYalto) && pelota.derechaX) {
         pelota.derechaX = !pelota.derechaX;
     }
     //Choca izquierda
@@ -352,12 +371,12 @@ Ladrillo.prototype.obtenerColor  = function ()
 Ladrillo.prototype.crearLadrillo  = function () 
 {
     var ladrillo = document.createElement("div");
-    ladrillo.style.width = this.anchoLadrillo + "px";
-    ladrillo.style.height = this.altoLadrillo + "px";
+    ladrillo.style.width = this.anchoLadrillo + "%";
+    ladrillo.style.height = this.altoLadrillo + "%";
     ladrillo.style.position = "absolute";
     ladrillo.className = "ladrillo";
-    ladrillo.style.left = this.posicionX + "px";
-    ladrillo.style.top = this.posicionY + "px";
+    ladrillo.style.left = this.posicionX + "%";
+    ladrillo.style.top = this.posicionY + "%";
     ladrillo.style.backgroundColor = this.obtenerColor();
     this.contenedora.divContenedora.appendChild(ladrillo);
     return ladrillo;
@@ -411,8 +430,8 @@ Barra.prototype.crearBarra  = function ()
     barra.style.height = this.altoBarra + "px";
     barra.style.position = "absolute";
     barra.className = "barra";
-    barra.style.left = this.posicionX + "px";
-    barra.style.top = this.posicionY + "px";
+    barra.style.left = window.innerWidth * (this.contenedora.anchoCajaJuego/100)/2 - this.anchoBarra/2 + "px";
+    barra.style.top = window.innerHeight * (this.contenedora.altoCajaJuego/100) - this.altoBarra - 20 + "px";
     barra.style.backgroundColor = this.color;
     padre = this.contenedora.divContenedora;
     padre.appendChild(barra);
@@ -517,8 +536,8 @@ Contenedora.prototype.crearContenedora  = function ()
     con.style.position = "absolute";
     con.style.left = this.posicionX + "px";
     con.style.top = this.posicionY + "px";
-    con.style.width = this.anchoCajaJuego + "px";
-    con.style.height = this.altoCajaJuego + "px";
+    con.style.width = this.anchoCajaJuego + "%";
+    con.style.height = this.altoCajaJuego + "%";
     con.style.backgroundColor = this.colorFondo;
     con.className = "contenedora";
     con.style.cssFloat = "left";
