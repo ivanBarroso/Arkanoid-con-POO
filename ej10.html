@@ -34,10 +34,10 @@ window.onload = function () {
     var posicionInicial = contenedora.posicionX + 1;
     var separacion = 1;
     var altoInicial = 3;
-    console.log(niveles[0].nivel1.length)
+    
     for (var i = 0; i<niveles.length;i++) 
     {
-        for (var j = 0; j<niveles.nivel1.linea.length;j++) 
+        for (var j = 0; j<niveles[i].linea.length;j++) 
         {
             if(posicionInicial + 8 > 100)
             {
@@ -50,7 +50,7 @@ window.onload = function () {
     }
    
 
-    new Barra(150, 40, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora);
+    new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora);
 
     setInterval(function(){
         mover(arrayPelotas1);
@@ -63,9 +63,24 @@ window.onload = function () {
     new Pelota(20, contenedora1.anchoCajaJuego/2, contenedora1.altoCajaJuego/2, 1, 4, 5, true, false, true, "red", contenedora1, arrayPelotas2);
     new Pelota(20, contenedora1.anchoCajaJuego/2, contenedora1.altoCajaJuego/2, 1, 4, 5, true, false, true, "red", contenedora1, arrayPelotas2);
     
-   
-    
-    new Barra(100, 20, 200, 350, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora1);
+    var posicionInicial = contenedora.posicionX + 1;
+    var separacion = 1;
+    var altoInicial = 3;
+    for (var i = 0; i<niveles.length;i++) 
+    {
+        for (var j = 0; j<niveles[i].linea.length;j++) 
+        {
+            if(posicionInicial + 8 > 100)
+            {
+                altoInicial+=6;
+                posicionInicial = contenedora.posicionX +1;
+            }
+            new Ladrillo(8, 5, posicionInicial, altoInicial, niveles[i].linea[j], 0, contenedora1, arrayLadrillos1);
+            posicionInicial+= 9;
+        }
+    }
+
+    new Barra(20, 3, 200, 350, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora1);
     setInterval(function(){
         mover(arrayPelotas2);
         }, 10);
@@ -426,12 +441,12 @@ function Barra(anchoBarra, altoBarra, posicionX, posicionY, color, colorLinea, c
 Barra.prototype.crearBarra  = function () 
 {
     var barra = document.createElement("div");
-    barra.style.width = this.anchoBarra + "px";
-    barra.style.height = this.altoBarra + "px";
+    barra.style.width = this.anchoBarra + "%";
+    barra.style.height = this.altoBarra + "%";
     barra.style.position = "absolute";
     barra.className = "barra";
     barra.style.left = window.innerWidth * (this.contenedora.anchoCajaJuego/100)/2 - this.anchoBarra/2 + "px";
-    barra.style.top = window.innerHeight * (this.contenedora.altoCajaJuego/100) - this.altoBarra - 20 + "px";
+    barra.style.top = window.innerHeight * (this.contenedora.altoCajaJuego/100) - this.altoBarra - 50 + "px";
     barra.style.backgroundColor = this.color;
     padre = this.contenedora.divContenedora;
     padre.appendChild(barra);
