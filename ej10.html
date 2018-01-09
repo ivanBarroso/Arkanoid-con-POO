@@ -16,96 +16,6 @@ window.onload = function () {
     altoCajaJuego = 400;
     */
     
-    contenedora = new Contenedora(40, 100, 0, 0, "#d6d6d6");
-
-    //Array de pelotas
-    arrayPelotas1 = new Array();
-    arrayLadrillos1 = new Array();  
-
-    arrayPelotas2 = new Array();
-    arrayLadrillos2 = new Array();  
-
-
-    new Pelota(10, 20, 100, 1, 4, 5, true, false, true, "red", contenedora, arrayPelotas1);
-    new Pelota(4,  40, 200, 1, 4, 5, true, false, true, "blue", contenedora, arrayPelotas1);
-    new Pelota(5,  70, 300, 1, 4, 5, true, false, true, "#f0f0f0", contenedora, arrayPelotas1);
-    new Pelota(6,  100, 150, 1, 4, 5, true, false, true, "#ffff00", contenedora, arrayPelotas1);
-
-    informacion = new Informacion(contenedora, contenedora, 20, "#0b0b0b");
-    
-    var posicionInicial = contenedora.posicionX + 1;
-    var separacion = 1;
-    var altoInicial = 3;
-    /*
-    //Numero de niveles
-    for(var o = 0; o < niveles.length;o++)
-    {
-        //Numero de lineas del nivel
-        for (var i = 0; i<niveles[o].nivel.length;i++) 
-        {
-
-            for (var j = 0; j<niveles[o].nivel[i].linea.length;j++) 
-            {
-                if(posicionInicial + 8 > 100)
-                {
-                    altoInicial+=6;
-                    posicionInicial = contenedora.posicionX +1;
-                }
-                new Ladrillo(8, 5, posicionInicial, altoInicial, niveles[o].nivel[i].linea[j], 0, contenedora, arrayLadrillos1);
-                posicionInicial+= 9;
-            }
-        }
-    }*/
-    //Numero de lineas del nivel
-    for (var i = 0; i<niveles[0].nivel.length;i++) 
-    {
-
-        for (var j = 0; j<niveles[0].nivel[i].linea.length;j++) 
-        {
-            if(posicionInicial + 8 > 100)
-            {
-                altoInicial+=6;
-                posicionInicial = contenedora.posicionX +1;
-            }
-            new Ladrillo(8, 5, posicionInicial, altoInicial, niveles[0].nivel[i].linea[j], 0, contenedora, arrayLadrillos1);
-            posicionInicial+= 9;
-        }
-    }
-
-    new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora);
-
-    setInterval(function(){
-        mover(arrayPelotas1);
-        }, 10);
-    
-    
-    contenedora1 = new Contenedora(40, 100, window.innerWidth* (contenedora.anchoCajaJuego/100 + informacion.anchoInformacion/100), 0, "#d6d6ff");
-    new Pelota(7, 30, 30, 1, 4, 5, true, false, true, "purple", contenedora1, arrayPelotas2);
-    new Pelota(8, 50, 300, 1, 4, 5, true, false, true, "yellow", contenedora1, arrayPelotas2);
-    new Pelota(9, 70, 90, 1, 4, 5, true, false, true, "green", contenedora1, arrayPelotas2);
-    new Pelota(5, 100, 200, 1, 4, 5, true, false, true, "red", contenedora1, arrayPelotas2);
-    
-    var posicionInicial = contenedora.posicionX + 1;
-    var separacion = 1;
-    var altoInicial = 3;
-    for (var i = 0; i<niveles[1].nivel.length;i++) 
-    {
-        for (var j = 0; j<niveles[1].nivel[i].linea.length;j++) 
-        {
-            if(posicionInicial + 8 > 100)
-            {
-                altoInicial+=6;
-                posicionInicial = contenedora.posicionX +1;
-            }
-            new Ladrillo(8, 5, posicionInicial, altoInicial, niveles[1].nivel[i].linea[j], 0, contenedora1, arrayLadrillos1);
-            posicionInicial+= 9;
-        }
-    }
-
-    new Barra(20, 3, 200, 350, "#123456", "#ff0000", "#0000ff", "#00ff00", contenedora1);
-    setInterval(function(){
-        mover(arrayPelotas2);
-        }, 10);
         /*
     contenedora2 = new Contenedora(600, 400, 0, contenedora1.altoCajaJuego, "#d6d6ff");
     arrayPelotas3 = new Array();
@@ -124,6 +34,8 @@ window.onload = function () {
         mover(arrayPelotas3);
         }, 10);
         */
+
+    new Arkanoid(1, 0);
 }
 // - - - - - - - - - -     C L A S E     P E L O T A    - - - - - - - - - - - 
 
@@ -415,9 +327,137 @@ Barra.prototype.crearTrianguloDerecha  = function ()
 //- - - - - -  - - - - - -   F I N    D E    C L A S E    B A R R A      - - - - - - - - 
 
 // - - - - - - - - - -     C L A S E     A R K A N O I D     - - - - - - - - - - - 
-function Arkanoid()
+function Arkanoid(numeroJugadores, nivelActual)
 {
+    this.numeroJugadores = numeroJugadores;
+    this.nivelActual = nivelActual;
+    if(numeroJugadores == 1)
+    {
+        contenedora = new Contenedora(80, 100, 0, 0, "#d6d6d6");
+        arrayPelotas1 = new Array();
+        arrayLadrillos1 = new Array();  
 
+        new Pelota(10, 20, 100, 1, 4, 5, true, false, true, "green", contenedora, arrayPelotas1);
+        informacion = new Informacion(contenedora, null, 20, "#0b0b0b");
+        new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora);
+        var posicionInicial = contenedora.posicionX + 1;
+        var separacion = 1;
+        var altoInicial = 3;
+        for (var i = 0; i<niveles[0].nivel.length;i++) 
+        {
+
+            for (var j = 0; j<niveles[0].nivel[i].linea.length;j++) 
+            {
+                if(posicionInicial + 8 > 100)
+                {
+                    altoInicial+=6;
+                    posicionInicial = contenedora.posicionX +1;
+                }
+                new Ladrillo(8, 5, posicionInicial, altoInicial, niveles[0].nivel[i].linea[j], 0, contenedora, arrayLadrillos1);
+                posicionInicial+= 9;
+            }
+        }
+
+        setInterval(function(){
+            mover(arrayPelotas1);
+            }, 10);
+        
+
+    }
+    else if(numeroJugadores == 2)
+    {
+        contenedora = new Contenedora(40, 100, 0, 0, "#d6d6d6");
+
+        //Array de pelotas
+        arrayPelotas1 = new Array();
+        arrayLadrillos1 = new Array();  
+
+        arrayPelotas2 = new Array();
+        arrayLadrillos2 = new Array();  
+
+
+        new Pelota(10, 20, 100, 1, 4, 5, true, false, true, "red", contenedora, arrayPelotas1);
+        new Pelota(4,  40, 200, 1, 4, 5, true, false, true, "blue", contenedora, arrayPelotas1);
+        new Pelota(5,  70, 300, 1, 4, 5, true, false, true, "#f0f0f0", contenedora, arrayPelotas1);
+        new Pelota(6,  100, 150, 1, 4, 5, true, false, true, "#ffff00", contenedora, arrayPelotas1);
+
+        informacion = new Informacion(contenedora, contenedora, 20, "#0b0b0b");
+        
+        var posicionInicial = contenedora.posicionX + 1;
+        var separacion = 1;
+        var altoInicial = 3;
+        /*
+        //Numero de niveles
+        for(var o = 0; o < niveles.length;o++)
+        {
+            //Numero de lineas del nivel
+            for (var i = 0; i<niveles[o].nivel.length;i++) 
+            {
+
+                for (var j = 0; j<niveles[o].nivel[i].linea.length;j++) 
+                {
+                    if(posicionInicial + 8 > 100)
+                    {
+                        altoInicial+=6;
+                        posicionInicial = contenedora.posicionX +1;
+                    }
+                    new Ladrillo(8, 5, posicionInicial, altoInicial, niveles[o].nivel[i].linea[j], 0, contenedora, arrayLadrillos1);
+                    posicionInicial+= 9;
+                }
+            }
+        }*/
+        //Numero de lineas del nivel
+        for (var i = 0; i<niveles[0].nivel.length;i++) 
+        {
+
+            for (var j = 0; j<niveles[0].nivel[i].linea.length;j++) 
+            {
+                if(posicionInicial + 8 > 100)
+                {
+                    altoInicial+=6;
+                    posicionInicial = contenedora.posicionX +1;
+                }
+                new Ladrillo(8, 5, posicionInicial, altoInicial, niveles[0].nivel[i].linea[j], 0, contenedora, arrayLadrillos1);
+                posicionInicial+= 9;
+            }
+        }
+
+        new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora);
+
+        setInterval(function(){
+            mover(arrayPelotas1);
+            }, 10);
+        
+        
+        contenedora1 = new Contenedora(40, 100, window.innerWidth* (contenedora.anchoCajaJuego/100 + informacion.anchoInformacion/100), 0, "#d6d6ff");
+        new Pelota(7, 30, 30, 1, 4, 5, true, false, true, "purple", contenedora1, arrayPelotas2);
+        new Pelota(8, 50, 300, 1, 4, 5, true, false, true, "yellow", contenedora1, arrayPelotas2);
+        new Pelota(9, 70, 90, 1, 4, 5, true, false, true, "green", contenedora1, arrayPelotas2);
+        new Pelota(5, 100, 200, 1, 4, 5, true, false, true, "red", contenedora1, arrayPelotas2);
+        
+        var posicionInicial = contenedora.posicionX + 1;
+        var separacion = 1;
+        var altoInicial = 3;
+        for (var i = 0; i<niveles[1].nivel.length;i++) 
+        {
+            for (var j = 0; j<niveles[1].nivel[i].linea.length;j++) 
+            {
+                if(posicionInicial + 8 > 100)
+                {
+                    altoInicial+=6;
+                    posicionInicial = contenedora.posicionX +1;
+                }
+                new Ladrillo(8, 5, posicionInicial, altoInicial, niveles[1].nivel[i].linea[j], 0, contenedora1, arrayLadrillos1);
+                posicionInicial+= 9;
+            }
+        }
+
+        new Barra(20, 3, 200, 350, "#123456", "#ff0000", "#0000ff", "#00ff00", contenedora1);
+        setInterval(function(){
+            mover(arrayPelotas2);
+            }, 10);
+    
+    }
 }
 //- - - - - -  - - - - - -   F I N    D E    C L A S E    A R K A N O I D      - - - - - - - - 
 
