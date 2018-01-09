@@ -223,7 +223,7 @@ Barra.prototype.crearBarra  = function ()
     barra.style.position = "absolute";
     barra.className = "barra";
     barra.style.left = window.innerWidth * (this.contenedora.anchoCajaJuego/100)/2 - this.anchoBarra/2 + "px";
-    barra.style.top = window.innerHeight * (this.contenedora.altoCajaJuego/100) - this.altoBarra - 50 + "px";
+    barra.style.top = window.innerHeight * (this.contenedora.altoCajaJuego/100) - window.innerHeight * this.altoBarra/50 + "px";
     barra.style.backgroundColor = this.color;
     padre = this.contenedora.divContenedora;
     padre.appendChild(barra);
