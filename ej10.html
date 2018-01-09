@@ -129,7 +129,7 @@ window.onload = function () {
 
 function Pelota(anchoYalto, x, y, pasoX, pasoY, intervalo, derechaX, arribaY, estaEnMovimiento, color, contenedora, arrayPelotas) {
     this.anchoYalto = anchoYalto;
-    this.anchoYaltoPx = window.innerWidth * contenedora.anchoCajaJuego * (anchoYalto/10000);
+    this.anchoYaltoPx = window.innerWidth * contenedora.anchoCajaJuego/100 * (anchoYalto/100);
     this.radio = this.anchoYaltoPx / 2;
     this.x = x;
     this.y = y;
