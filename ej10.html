@@ -34,21 +34,41 @@ window.onload = function () {
     var posicionInicial = contenedora.posicionX + 1;
     var separacion = 1;
     var altoInicial = 3;
-    
-    for (var i = 0; i<niveles.length;i++) 
+    /*
+    //Numero de niveles
+    for(var o = 0; o < niveles.length;o++)
     {
-        for (var j = 0; j<niveles[i].linea.length;j++) 
+        //Numero de lineas del nivel
+        for (var i = 0; i<niveles[o].nivel.length;i++) 
+        {
+
+            for (var j = 0; j<niveles[o].nivel[i].linea.length;j++) 
+            {
+                if(posicionInicial + 8 > 100)
+                {
+                    altoInicial+=6;
+                    posicionInicial = contenedora.posicionX +1;
+                }
+                new Ladrillo(8, 5, posicionInicial, altoInicial, niveles[o].nivel[i].linea[j], 0, contenedora, arrayLadrillos1);
+                posicionInicial+= 9;
+            }
+        }
+    }*/
+    //Numero de lineas del nivel
+    for (var i = 0; i<niveles[0].nivel.length;i++) 
+    {
+
+        for (var j = 0; j<niveles[0].nivel[i].linea.length;j++) 
         {
             if(posicionInicial + 8 > 100)
             {
                 altoInicial+=6;
                 posicionInicial = contenedora.posicionX +1;
             }
-            new Ladrillo(8, 5, posicionInicial, altoInicial, niveles[i].linea[j], 0, contenedora, arrayLadrillos1);
+            new Ladrillo(8, 5, posicionInicial, altoInicial, niveles[0].nivel[i].linea[j], 0, contenedora, arrayLadrillos1);
             posicionInicial+= 9;
         }
     }
-   
 
     new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora);
 
@@ -66,21 +86,22 @@ window.onload = function () {
     var posicionInicial = contenedora.posicionX + 1;
     var separacion = 1;
     var altoInicial = 3;
-    for (var i = 0; i<niveles.length;i++) 
+    for (var i = 0; i<niveles[1].nivel.length;i++) 
     {
-        for (var j = 0; j<niveles[i].linea.length;j++) 
+
+        for (var j = 0; j<niveles[1].nivel[i].linea.length;j++) 
         {
             if(posicionInicial + 8 > 100)
             {
                 altoInicial+=6;
                 posicionInicial = contenedora.posicionX +1;
             }
-            new Ladrillo(8, 5, posicionInicial, altoInicial, niveles[i].linea[j], 0, contenedora1, arrayLadrillos1);
+            new Ladrillo(8, 5, posicionInicial, altoInicial, niveles[1].nivel[i].linea[j], 0, contenedora1, arrayLadrillos1);
             posicionInicial+= 9;
         }
     }
 
-    new Barra(20, 3, 200, 350, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora1);
+    new Barra(20, 3, 200, 350, "#123456", "#ff0000", "#0000ff", "#00ff00", contenedora1);
     setInterval(function(){
         mover(arrayPelotas2);
         }, 10);
