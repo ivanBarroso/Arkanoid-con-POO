@@ -483,10 +483,13 @@ Informacion.prototype.crearInfoJugador1  = function ()
     var padre = this.divInformacion;
     var inf = document.createElement("div");
     inf.style.position = "absolute";
-    inf.style.width = 100 + "%";
-    inf.style.height = 50 + "%";
+    inf.style.width = 96 + "%";
+    inf.style.height = 46 + "%";
+    inf.style.margin = "2%";
     inf.style.backgroundColor = this.colorFondo;
     inf.className = "informacion";
+    var texto = document.createTextNode("Jugador I");
+    inf.appendChild(texto);
     padre.appendChild(inf);
     return inf;
 }
@@ -496,10 +499,13 @@ Informacion.prototype.crearInfoJugador2  = function ()
     var inf = document.createElement("div");
     inf.style.position = "absolute";
     inf.style.top = 50 + "%";
-    inf.style.width = 100 + "%";
-    inf.style.height = 50 + "%";
+    inf.style.width = 96 + "%";
+    inf.style.height = 46 + "%";
+    inf.style.margin = "2%";
     inf.style.backgroundColor = this.colorFondo;
     inf.className = "informacion";
+    var texto = document.createTextNode("Jugador II");
+    inf.appendChild(texto);
     padre.appendChild(inf);
     return inf;
 }

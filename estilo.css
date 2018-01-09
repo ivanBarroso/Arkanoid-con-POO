@@ -1,6 +1,12 @@
+
 @font-face {
-    font-family: Vivaldi;
+    font-family: ARKANOID;
     font-style: normal;
     font-weight: normal;
     src: url(ARKANOID.TTF);
+ }
+ .informacion
+ {
+    font-family: ARKANOID;
+    color:red;
  }
