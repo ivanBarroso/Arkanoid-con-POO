@@ -26,10 +26,10 @@ window.onload = function () {
     arrayLadrillos2 = new Array();  
 
 
-    new Pelota(10, 0 + 20, 100, 1, 4, 5, true, false, true, "red", contenedora, arrayPelotas1);
-    new Pelota(4, 0 + 20, 200, 1, 4, 5, true, false, true, "blue", contenedora, arrayPelotas1);
-    new Pelota(5, 0 + 20, 300, 1, 4, 5, true, false, true, "#f0f0f0", contenedora, arrayPelotas1);
-    new Pelota(6, 0 + 20, 400, 1, 4, 5, true, false, true, "#ffff00", contenedora, arrayPelotas1);
+    new Pelota(10, 20, 100, 1, 4, 5, true, false, true, "red", contenedora, arrayPelotas1);
+    new Pelota(4,  40, 200, 1, 4, 5, true, false, true, "blue", contenedora, arrayPelotas1);
+    new Pelota(5,  70, 300, 1, 4, 5, true, false, true, "#f0f0f0", contenedora, arrayPelotas1);
+    new Pelota(6,  100, 150, 1, 4, 5, true, false, true, "#ffff00", contenedora, arrayPelotas1);
 
     informacion = new Informacion(contenedora, contenedora, 20, "#0b0b0b");
     
@@ -80,10 +80,10 @@ window.onload = function () {
     
     
     contenedora1 = new Contenedora(40, 100, window.innerWidth* (contenedora.anchoCajaJuego/100 + informacion.anchoInformacion/100), 0, "#d6d6ff");
-    new Pelota(7, 100, contenedora1.altoCajaJuego/2, 1, 4, 5, true, false, true, "purple", contenedora1, arrayPelotas2);
-    new Pelota(8, 200, contenedora1.altoCajaJuego/2, 1, 4, 5, true, false, true, "yellow", contenedora1, arrayPelotas2);
-    new Pelota(9, 300, contenedora1.altoCajaJuego/2, 1, 4, 5, true, false, true, "green", contenedora1, arrayPelotas2);
-    new Pelota(5, contenedora1.anchoCajaJuego/2, contenedora1.altoCajaJuego/2, 1, 4, 5, true, false, true, "red", contenedora1, arrayPelotas2);
+    new Pelota(7, 30, 30, 1, 4, 5, true, false, true, "purple", contenedora1, arrayPelotas2);
+    new Pelota(8, 50, 60, 1, 4, 5, true, false, true, "yellow", contenedora1, arrayPelotas2);
+    new Pelota(9, 70, 90, 1, 4, 5, true, false, true, "green", contenedora1, arrayPelotas2);
+    new Pelota(5, 100, 100, 1, 4, 5, true, false, true, "red", contenedora1, arrayPelotas2);
     
     var posicionInicial = contenedora.posicionX + 1;
     var separacion = 1;
