@@ -239,142 +239,6 @@ Pelota.prototype.comprobarPosicion  = function ()
 }
 // - - - - - F I N    D E    L A   C L A S E    P E L O T A  - - - - - - -
 
-function mover(arrayPelotas) {
-    //Si solo hay una pelota
-    if(arrayPelotas.length <= 1)
-    {
-        comprobarColisionParedes(arrayPelotas[0]);
-        if(arrayPelotas[0].estaEnMovimiento)
-        {
-            arrayPelotas[0].avanzarY();
-            arrayPelotas[0].avanzarX();
-        }
-    }
-    //Si hay mas de una pelotas
-    else
-    {
-        //Pasamos por todas las pelotas
-        for (var i = 0; i < arrayPelotas.length; i++) 
-        {        
-            //comprobarColisionParedes(arrayPelotas[i]);
-
-            for(var j = 0; j < arrayPelotas.length; j++)
-            {
-                //EVITA QUE SE COMPRUEBE UNA PELOTA CON LA MISMA DEL ARRAY
-                if(arrayPelotas[i] != arrayPelotas[j])
-                {
-                    comprobarColisionPelotas(arrayPelotas[i], arrayPelotas[j]);
-                    comprobarColisionParedes(arrayPelotas[j]);
-
-                }
-            }
-            if(arrayPelotas[i].estaEnMovimiento)
-            {
-                arrayPelotas[i].avanzarY();
-                arrayPelotas[i].avanzarX();
-            }
-        }
-    }   
-}
-/*
- *Comprueba si al moverse esa pelota colisionara con alguna de las paredes, en ese caso cambia el sentido de la pelota.
- *
- *
- */
-function comprobarColisionParedes(pelota) {
-    //Choca arriba
-    if (pelota.y - pelota.pasoY <= this.contenedora.posicionX && pelota.arribaY) {
-        pelota.arribaY = false;
-    }
-    //Choca abajo
-    else if (pelota.pasoY + pelota.y > (window.innerHeight * (pelota.contenedora.altoCajaJuego/100) - pelota.anchoYalto) && !pelota.arribaY) {
-    pelota.arribaY = true;
-    }
-    //Choca derecha
-    if (pelota.pasoX + pelota.x >= (window.innerWidth* (contenedora.anchoCajaJuego/100) - pelota.anchoYalto) && pelota.derechaX) {
-        pelota.derechaX = !pelota.derechaX;
-    }
-    //Choca izquierda
-    else if (pelota.x - pelota.pasoX <= 0 && !pelota.derechaX) {
-        pelota.derechaX = !pelota.derechaX;
-    }
-}
-
-function comprobarColisionPelotas(pelota1, pelota2) 
-{
-    //Centros de la pelota 1
-    var cenXBola1 = pelota1.x + (pelota1.radio);
-    var cenYBola1 = pelota1.y + (pelota1.radio);
-    //Centros de la pelota 2
-    var cenXBola2 = pelota2.x + (pelota2.radio);
-    var cenYBola2 = pelota2.y + (pelota2.radio);
-    
-    distanciaEntrePelotas = Math.hypot(cenXBola1 - cenXBola2, cenYBola1 - cenYBola2);
-    //Si van a colisionar las pelotas en su siguiente paso
-    if (distanciaEntrePelotas <  pelota1.radio + ((pelota1.pasoX + pelota1.pasoY) /2) + pelota2.radio  + ((pelota2.pasoX + pelota2.pasoY) /2) + 1)
-    {
-        //alert("comprobando "+pelota1.color + " con "+pelota2.color + " distancia "+distanciaEntrePelotas + " tope " + (pelota1.radio + pelota2.radio) )
-        //si las dos avanzan hacia arriba o abajo  /\  \/
-        if(pelota1.arribaY == pelota2.arribaY && pelota1.derechaX != pelota2.derechaX)
-        {
-            //Si es la mas rapida cambiamos el sentido para que no la sobrepase
-            if(pelota1.pasoY >= pelota2.pasoY)
-            {
-                //pelota1.arribaY = !pelota1.arribaY;
-                pelota1.derechaX = !pelota1.derechaX;
-                pelota2.derechaX = !pelota1.derechaX;
-            }
-            else
-            {
-                pelota2.derechaX = !pelota2.derechaX;
-                pelota1.derechaX = !pelota2.derechaX;
-            }
-            //console.log("choque arriba abajo")
-        }
-        //si avanzan hacia la izquierda o derecha > <
-        else if(pelota1.derechaX == pelota2.derechaX && pelota1.arribaY != pelota2.arribaY)
-        {
-            //Si es la mas rapida cambiamos el sentido para que no la sobrepase
-            if(pelota1.pasoX >= pelota2.pasoX)
-            {
-                pelota1.arribaY = !pelota1.arribaY;
-                pelota1.derechaX = !pelota1.derechaX;
-                pelota2.arribaY = !pelota1.arribaY;
-            }
-            //console.log("choque izquierda o derecha")
-
-        }
-        //si avanzan en direccion contraria una contra otra | --
-        else if(pelota1.derechaX != pelota2.derechaX && pelota1.arribaY != pelota2.arribaY)
-        {
-            pelota1.arribaY = !pelota1.arribaY;
-            pelota1.derechaX = !pelota1.derechaX;
-
-            pelota2.arribaY = !pelota1.arribaY;
-            pelota2.derechaX = !pelota1.derechaX;
-            //console.log("choque contrario")
-        }
-        //Si avanzan en la misma direccion (distinta velocidad)
-        else
-        {
-            //console.log("choque misma direccion")
-            if(pelota1.pasoX + pelota1.pasoY >= pelota2.pasoY + pelota2.pasoX)
-            {
-                pelota1.arribaY = !pelota1.arribaY;
-                pelota1.derechaX = !pelota1.derechaX;
-            }
-            else
-            {
-                pelota2.derechaX = !pelota2.derechaX;
-            }
-        }
-        //Separamos las pelotas para que no sigan colisionando
-        pelota1.avanzarX();
-        pelota1.avanzarY();
-        pelota2.avanzarX();
-        pelota2.avanzarY();
-    }
-}
 // - - - - - - - - - -     C L A S E     L A D R I L L O    - - - - - - - - - - - 
 function Ladrillo(anchoLadrillo, altoLadrillo, posicionX, posicionY, vida, extra, contenedora, arrayLadrillos)
 {
@@ -582,12 +446,147 @@ Contenedora.prototype.crearContenedora  = function ()
 //- - - - - -  - - - - - -   F I N    D E    C L A S E    C O N T E N E D O R A      - - - - - - - - 
 
 //METODOS QUE USAN VARIOS OBJETOS
-
 function borrarElemento(elemento)
 {
     if(elemento.parentNode != null)
     {
         elemento.parentNode.removeChild(elemento);
+    }
+}
+function mover(arrayPelotas) {
+    //Si solo hay una pelota
+    if(arrayPelotas.length <= 1)
+    {
+        comprobarColisionParedes(arrayPelotas[0]);
+        if(arrayPelotas[0].estaEnMovimiento)
+        {
+            arrayPelotas[0].avanzarY();
+            arrayPelotas[0].avanzarX();
+        }
+    }
+    //Si hay mas de una pelotas
+    else
+    {
+        //Pasamos por todas las pelotas
+        for (var i = 0; i < arrayPelotas.length; i++) 
+        {        
+            //comprobarColisionParedes(arrayPelotas[i]);
+
+            for(var j = 0; j < arrayPelotas.length; j++)
+            {
+                //EVITA QUE SE COMPRUEBE UNA PELOTA CON LA MISMA DEL ARRAY
+                if(arrayPelotas[i] != arrayPelotas[j])
+                {
+                    comprobarColisionPelotas(arrayPelotas[i], arrayPelotas[j]);
+                    comprobarColisionParedes(arrayPelotas[j]);
+
+                }
+            }
+            if(arrayPelotas[i].estaEnMovimiento)
+            {
+                arrayPelotas[i].avanzarY();
+                arrayPelotas[i].avanzarX();
+            }
+        }
+    }   
+}
+/*
+ *Comprueba si al moverse esa pelota colisionara con alguna de las paredes, en ese caso cambia el sentido de la pelota.
+ *
+ *
+ */
+function comprobarColisionParedes(pelota) {
+    //Choca arriba
+    if (pelota.y - pelota.pasoY <= this.contenedora.posicionX && pelota.arribaY) {
+        pelota.arribaY = false;
+    }
+    //Choca abajo
+    else if (pelota.pasoY + pelota.y > (window.innerHeight * (pelota.contenedora.altoCajaJuego/100) - pelota.anchoYalto) && !pelota.arribaY) {
+    pelota.arribaY = true;
+    }
+    //Choca derecha
+    if (pelota.pasoX + pelota.x >= (window.innerWidth* (contenedora.anchoCajaJuego/100) - pelota.anchoYalto) && pelota.derechaX) {
+        pelota.derechaX = !pelota.derechaX;
+    }
+    //Choca izquierda
+    else if (pelota.x - pelota.pasoX <= 0 && !pelota.derechaX) {
+        pelota.derechaX = !pelota.derechaX;
+    }
+}
+
+function comprobarColisionPelotas(pelota1, pelota2) 
+{
+    //Centros de la pelota 1
+    var cenXBola1 = pelota1.x + (pelota1.radio);
+    var cenYBola1 = pelota1.y + (pelota1.radio);
+    //Centros de la pelota 2
+    var cenXBola2 = pelota2.x + (pelota2.radio);
+    var cenYBola2 = pelota2.y + (pelota2.radio);
+    
+    distanciaEntrePelotas = Math.hypot(cenXBola1 - cenXBola2, cenYBola1 - cenYBola2);
+    //Si van a colisionar las pelotas en su siguiente paso
+    if (distanciaEntrePelotas <  pelota1.radio + ((pelota1.pasoX + pelota1.pasoY) /2) + pelota2.radio  + ((pelota2.pasoX + pelota2.pasoY) /2) + 1)
+    {
+        //alert("comprobando "+pelota1.color + " con "+pelota2.color + " distancia "+distanciaEntrePelotas + " tope " + (pelota1.radio + pelota2.radio) )
+        //si las dos avanzan hacia arriba o abajo  /\  \/
+        if(pelota1.arribaY == pelota2.arribaY && pelota1.derechaX != pelota2.derechaX)
+        {
+            //Si es la mas rapida cambiamos el sentido para que no la sobrepase
+            if(pelota1.pasoY >= pelota2.pasoY)
+            {
+                //pelota1.arribaY = !pelota1.arribaY;
+                pelota1.derechaX = !pelota1.derechaX;
+                pelota2.derechaX = !pelota1.derechaX;
+            }
+            else
+            {
+                pelota2.derechaX = !pelota2.derechaX;
+                pelota1.derechaX = !pelota2.derechaX;
+            }
+            //console.log("choque arriba abajo")
+        }
+        //si avanzan hacia la izquierda o derecha > <
+        else if(pelota1.derechaX == pelota2.derechaX && pelota1.arribaY != pelota2.arribaY)
+        {
+            //Si es la mas rapida cambiamos el sentido para que no la sobrepase
+            if(pelota1.pasoX >= pelota2.pasoX)
+            {
+                pelota1.arribaY = !pelota1.arribaY;
+                pelota1.derechaX = !pelota1.derechaX;
+                pelota2.arribaY = !pelota1.arribaY;
+            }
+            //console.log("choque izquierda o derecha")
+
+        }
+        //si avanzan en direccion contraria una contra otra | --
+        else if(pelota1.derechaX != pelota2.derechaX && pelota1.arribaY != pelota2.arribaY)
+        {
+            pelota1.arribaY = !pelota1.arribaY;
+            pelota1.derechaX = !pelota1.derechaX;
+
+            pelota2.arribaY = !pelota1.arribaY;
+            pelota2.derechaX = !pelota1.derechaX;
+            //console.log("choque contrario")
+        }
+        //Si avanzan en la misma direccion (distinta velocidad)
+        else
+        {
+            //console.log("choque misma direccion")
+            if(pelota1.pasoX + pelota1.pasoY >= pelota2.pasoY + pelota2.pasoX)
+            {
+                pelota1.arribaY = !pelota1.arribaY;
+                pelota1.derechaX = !pelota1.derechaX;
+            }
+            else
+            {
+                pelota2.derechaX = !pelota2.derechaX;
+            }
+        }
+        //Separamos las pelotas para que no sigan colisionando
+        pelota1.avanzarX();
+        pelota1.avanzarY();
+        pelota2.avanzarX();
+        pelota2.avanzarY();
     }
 }
 </script>
