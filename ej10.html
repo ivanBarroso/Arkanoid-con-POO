@@ -12,11 +12,9 @@
 
 window.onload = function () {
 
-    juego = new Arkanoid(2, 1, false);
+    juego = new Arkanoid(2, 0, false);
     document.onkeypress = comprobarTecla;
-
- 
-}
+ }
 // - - - - - - - - - -     C L A S E     P E L O T A    - - - - - - - - - - - 
 
 function Pelota(anchoYalto, x, y, pasoX, pasoY, intervalo, derechaX, arribaY, estaEnMovimiento, color, contenedora, arrayPelotas) {
@@ -318,8 +316,7 @@ Barra.prototype.moverDerecha = function()
 Barra.prototype.moverIzquierda = function()
 {
     var barraFuturo = parseInt(this.divBarra.style.left) - this.pasoBarra;
-    var bordeIzquierdoContenedora = parseInt(this.contenedora.posicionX);
-
+    var bordeIzquierdoContenedora = 0;
     if(barraFuturo >= bordeIzquierdoContenedora - this.anchoBarraPx/2)
     {
         this.divBarra.style.left = barraFuturo + "px";
@@ -349,7 +346,10 @@ function Arkanoid(numeroJugadores, nivelActual, iniciado)
         contenedora = new Contenedora(80, 100, 0, 0, "#d6d6d6");
         informacion = new Informacion(contenedora, null, 20, "#0b0b0b");
         new Pelota(5, 20, 100, 1, 4, 5, true, false, true, "green", contenedora, arrayPelotas1);
-        this.intervalo = this.comenzarJuegoJ1();
+        new Pelota(5, 100, 100, 1, 4, 5, true, false, true, "yellow", contenedora, arrayPelotas1);
+
+        this.barraj1 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora, 40);
+        
     }
     else if(numeroJugadores == 2)
     {
@@ -448,7 +448,6 @@ Arkanoid.prototype.reanudar  = function ()
         this.comenzarJuegoJ1();
         this.comenzarJuegoJ2();
     }
-   
 }  
 //- - - - - -  - - - - - -   F I N    D E    C L A S E    A R K A N O I D      - - - - - - - - 
 
@@ -506,6 +505,7 @@ Informacion.prototype.crearInformacion  = function ()
     inf.style.height = this.altoInformacion + "%";
     inf.style.backgroundColor = this.colorFondo;
     inf.className = "informacion";
+    inf.style.zIndex = 2;
     inf.style.cssFloat = "left";
     padre.appendChild(inf);
     return inf;
@@ -553,63 +553,72 @@ function borrarElemento(elemento)
 }
 function mover(arrayPelotas) {
     //Si solo hay una pelota
-    if(arrayPelotas.length <= 1)
-    {
-        comprobarColisionParedes(arrayPelotas[0]);
-        if(arrayPelotas[0].estaEnMovimiento)
+    
+        if(arrayPelotas.length <= 1)
         {
-            arrayPelotas[0].avanzarY();
-            arrayPelotas[0].avanzarX();
-        }
-    }
-    //Si hay mas de una pelotas
-    else
-    {
-        //Pasamos por todas las pelotas
-        for (var i = 0; i < arrayPelotas.length; i++) 
-        {        
-            //comprobarColisionParedes(arrayPelotas[i]);
-
-            for(var j = 0; j < arrayPelotas.length; j++)
+            if(arrayPelotas[0] != undefined)
             {
-                //EVITA QUE SE COMPRUEBE UNA PELOTA CON LA MISMA DEL ARRAY
-                if(arrayPelotas[i] != arrayPelotas[j])
+                comprobarColisionParedes(arrayPelotas[0]);
+                if(arrayPelotas[0].estaEnMovimiento)
                 {
-                    comprobarColisionPelotas(arrayPelotas[i], arrayPelotas[j]);
-                    comprobarColisionParedes(arrayPelotas[j]);
-
+                    arrayPelotas[0].avanzarY();
+                    arrayPelotas[0].avanzarX();
                 }
             }
-            if(arrayPelotas[i].estaEnMovimiento)
-            {
-                arrayPelotas[i].avanzarY();
-                arrayPelotas[i].avanzarX();
-            }
         }
-    }   
+        //Si hay mas de una pelotas
+        else
+        {
+            //Pasamos por todas las pelotas
+            for (var i = 0; i < arrayPelotas.length; i++) 
+            {        
+                //comprobarColisionParedes(arrayPelotas[i]);
+
+                for(var j = 0; j < arrayPelotas.length; j++)
+                {
+                    //EVITA QUE SE COMPRUEBE UNA PELOTA CON LA MISMA DEL ARRAY
+                    if(arrayPelotas[i] != arrayPelotas[j])
+                    {
+                        comprobarColisionPelotas(arrayPelotas[i], arrayPelotas[j]);
+                        comprobarColisionParedes(arrayPelotas[j]);
+                    }
+                }
+                if(arrayPelotas[i].estaEnMovimiento)
+                {
+                    arrayPelotas[i].avanzarY();
+                    arrayPelotas[i].avanzarX();
+                }
+            }
+        }   
+    
 }
+    
 /*
  *Comprueba si al moverse esa pelota colisionara con alguna de las paredes, en ese caso cambia el sentido de la pelota.
  *
  *
  */
 function comprobarColisionParedes(pelota) {
+    if(pelota != undefined)
+    {
     //Choca arriba
     if (pelota.y - pelota.pasoY <= this.contenedora.posicionX && pelota.arribaY) {
-        pelota.arribaY = false;
+            pelota.arribaY = false;
+        }
+        //Choca abajo
+        else if (pelota.pasoY + pelota.y > (window.innerHeight * (pelota.contenedora.altoCajaJuego/100) - pelota.anchoYaltoPx) && !pelota.arribaY) {
+        pelota.arribaY = true;
+        }
+        //Choca derecha
+        if (pelota.pasoX + pelota.x >= (window.innerWidth* (contenedora.anchoCajaJuego/100) - pelota.anchoYaltoPx) && pelota.derechaX) {
+            pelota.derechaX = !pelota.derechaX;
+        }
+        //Choca izquierda
+        else if (pelota.x - pelota.pasoX <= 0 && !pelota.derechaX) {
+            pelota.derechaX = !pelota.derechaX;
+        }
     }
-    //Choca abajo
-    else if (pelota.pasoY + pelota.y > (window.innerHeight * (pelota.contenedora.altoCajaJuego/100) - pelota.anchoYaltoPx) && !pelota.arribaY) {
-    pelota.arribaY = true;
-    }
-    //Choca derecha
-    if (pelota.pasoX + pelota.x >= (window.innerWidth* (contenedora.anchoCajaJuego/100) - pelota.anchoYaltoPx) && pelota.derechaX) {
-        pelota.derechaX = !pelota.derechaX;
-    }
-    //Choca izquierda
-    else if (pelota.x - pelota.pasoX <= 0 && !pelota.derechaX) {
-        pelota.derechaX = !pelota.derechaX;
-    }
+   
 }
 
 function comprobarColisionPelotas(pelota1, pelota2) 
@@ -701,40 +710,58 @@ function comprobarTecla(elEvento)
     switch (evento.keyCode){
     //flecha izquierda
     case 37:
-        
-        if(juego.estaEnMovimiento)
+        if(juego.numeroJugadores == 2)
         {
-            juego.barraj1.moverIzquierda();
+            if(juego.estaEnMovimiento)
+            {
+                juego.barraj2.moverIzquierda();
+            }
         }
-
-        //PONER TOPES
-        
     break;
     //flecha derecha
     case 39:
-        
+        if(juego.numeroJugadores == 2)
+            {
+                if(juego.estaEnMovimiento)
+                {
+                    juego.barraj2.moverDerecha();
+                }
+            }    
+        }
+	  
+  //Al pulsar la letra p o P
+  switch(String.fromCharCode(evento.charCode))
+  {
+    case "p":
+    case "P":
+        if(!juego.estaEnMovimiento && juego.iniciado)
+        {
+            juego.reanudar();
+            juego.estaEnMovimiento = true;
+            //playAudio(audioFondo);
+        }
+        else
+        {
+            //pauseAudio(audioFondo);
+            juego.pausar();
+            juego.estaEnMovimiento = false;
+        }
+    break;
+    case "a":
+    case "A":
+        if(juego.estaEnMovimiento)
+        {
+            juego.barraj1.moverIzquierda();
+            
+        }
+    break;
+    case "d":
+    case "D":
         if(juego.estaEnMovimiento)
         {
             juego.barraj1.moverDerecha();
         }
-        // PONER TOPES
-    }
-	  
-  //Al pulsar la letra p o P
-  if (String.fromCharCode(evento.charCode) == "p" || String.fromCharCode(evento.charCode) == "P" )
-  {
-    if(!juego.estaEnMovimiento && juego.iniciado)
-    {
-      juego.reanudar();
-      juego.estaEnMovimiento = true;
-      //playAudio(audioFondo);
-    }
-    else
-    {
-      //pauseAudio(audioFondo);
-      juego.pausar();
-      juego.estaEnMovimiento = false;
-    }
+    break;
   }
 }
 
