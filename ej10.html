@@ -363,7 +363,7 @@ function Arkanoid(numeroJugadores, nivelActual, iniciado)
         // J1
         contenedora = new Contenedora(40, 100, 0, 0, "#d6d6d6");
         barraj1 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora, 40);
-        new Pelota(5, parseInt(barraj1.divBarra.style.left)*1.2, parseInt(barraj1.divBarra.style.top)*0.96, 1, 4, 5, true, true, true, "green", contenedora, arrayPelotas1);
+        new Pelota(5, parseInt(barraj1.divBarra.style.left)*1.2, parseInt(barraj1.divBarra.style.top)*0.96, 1, 4, 5, false, true, true, "green", contenedora, arrayPelotas1);
         informacion = new Informacion(contenedora, contenedora, 20, "#0b0b0b");
         // J2
         contenedora1 = new Contenedora(40, 100, window.innerWidth* (contenedora.anchoCajaJuego/100 + informacion.anchoInformacion/100), 0, "#d6d6ff");
