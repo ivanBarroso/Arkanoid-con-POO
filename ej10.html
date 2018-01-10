@@ -13,7 +13,9 @@
 window.onload = function () {
 
     juego = new Arkanoid(2, 1, false);
-    
+    document.onkeypress = comprobarTecla;
+
+ 
 }
 // - - - - - - - - - -     C L A S E     P E L O T A    - - - - - - - - - - - 
 
@@ -310,6 +312,7 @@ function Arkanoid(numeroJugadores, nivelActual, iniciado)
     this.numeroJugadores = numeroJugadores;
     this.nivelActual = nivelActual;
     this.iniciado = iniciado;
+    this.estaEnMovimiento = false;
     this.intervalo1 = "";
     this.intervalo2 = "";
 
@@ -337,10 +340,11 @@ function Arkanoid(numeroJugadores, nivelActual, iniciado)
         contenedora1 = new Contenedora(40, 100, window.innerWidth* (contenedora.anchoCajaJuego/100 + informacion.anchoInformacion/100), 0, "#d6d6ff");
         new Pelota(5, 100, 200, 1, 4, 5, true, false, true, "red", contenedora1, arrayPelotas2);
         new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora1);
-
-        this.intervalo1 = this.comenzarJuegoJ1();
-        this.intervalo2 = this.comenzarJuegoJ2();
-
+        if(this.iniciado)
+        {
+            this.comenzarJuegoJ1();
+            this.comenzarJuegoJ2();
+        }
     }
     this.pintarNivel();
 
@@ -386,24 +390,43 @@ Arkanoid.prototype.pintarNivel  = function ()
 }
 Arkanoid.prototype.comenzarJuegoJ1  = function () 
 {
-    if(this.iniciado == false)
-    {
-        this.iniciado = true;
-    }
-    return setInterval(function(){
-            mover(arrayPelotas1);
-            }, 10);
+    this.intervalo1 = setInterval(function(){
+        mover(arrayPelotas1);
+    }, 10);
 }
 Arkanoid.prototype.comenzarJuegoJ2  = function () 
 {
-    if(this.iniciado == false)
-    {
-        this.iniciado = true;
-    }
-    return setInterval(function(){
-            mover(arrayPelotas2);
-            }, 10);
+    this.intervalo2 = setInterval(function(){
+        mover(arrayPelotas2);
+    }, 10);
 }
+Arkanoid.prototype.iniciarJuego  = function () 
+{
+    //Solo se puede iniciar una vez el juego
+    if(!this.iniciado)
+    {
+        this.comenzarJuegoJ1();
+        this.comenzarJuegoJ2();
+        this.iniciado = true;
+        this.estaEnMovimiento = true;
+    }  
+} 
+Arkanoid.prototype.pausar  = function () 
+{
+    clearInterval(this.intervalo1);
+    clearInterval(this.intervalo2);
+    this.estaEnMovimiento = false;
+}
+Arkanoid.prototype.reanudar  = function () 
+{
+    if(this.iniciado)
+    {
+        this.estaEnMovimiento = true;
+        this.comenzarJuegoJ1();
+        this.comenzarJuegoJ2();
+    }
+   
+}  
 //- - - - - -  - - - - - -   F I N    D E    C L A S E    A R K A N O I D      - - - - - - - - 
 
 // - - - - - - - - - -     C L A S E     C O N T E N E D O R A     - - - - - - - - - - - 
@@ -496,7 +519,8 @@ Informacion.prototype.crearInfoJugador2  = function ()
     return inf;
 }
 //- - - - - -  - - - - - -   F I N    D E    C L A S E    I N F O R M A C I O N      - - - - - - - - 
-//METODOS QUE USAN VARIOS OBJETOS
+
+// M E T O D O S    Q U E    U S A N    V A R I O S    O B J E T O S
 function borrarElemento(elemento)
 {
     if(elemento.parentNode != null)
@@ -640,6 +664,57 @@ function comprobarColisionPelotas(pelota1, pelota2)
         pelota2.avanzarY();
     }
 }
+
+// M E T O D O S    D E   C O M P R O B A C I O N   T E C L A S   P U L S A D A S
+function comprobarTecla(elEvento)
+{
+	var evento = window.event || elEvento;
+
+    //Barra espaciadora
+	if(evento.charCode == 32)
+	{
+        juego.iniciarJuego();        
+	}
+    switch (evento.keyCode){
+    //flecha izquierda
+    case 37:
+        base.style.left = parseInt(base.style.left) - pasoBarra + "px";
+        if(!estaEnMovimiento)
+        {
+        ponerEncimaCentroBase(pelota);
+        }
+
+        //PONER TOPES
+        
+    break;
+    //flecha derecha
+    case 39:
+        base.style.left = parseInt(base.style.left) + pasoBarra + "px";
+        if(!estaEnMovimiento)
+        {
+        ponerEncimaCentroBase(pelota);
+        }
+        // PONER TOPES
+    }
+	  
+  //Al pulsar la letra p o P
+  if (String.fromCharCode(evento.charCode) == "p" || String.fromCharCode(evento.charCode) == "P" )
+  {
+    if(!juego.estaEnMovimiento && juego.iniciado)
+    {
+      juego.reanudar();
+      juego.estaEnMovimiento = true;
+      //playAudio(audioFondo);
+    }
+    else
+    {
+      //pauseAudio(audioFondo);
+      juego.pausar();
+      juego.estaEnMovimiento = false;
+    }
+  }
+}
+
 </script>
 
 <body>
