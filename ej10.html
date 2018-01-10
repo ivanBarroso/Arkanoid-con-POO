@@ -12,7 +12,7 @@
 
 window.onload = function () {
 
-    juego = new Arkanoid(2, 0, false);
+    juego = new Arkanoid(1, 0, false);
     document.onkeypress = comprobarTecla;
  }
 // - - - - - - - - - -     C L A S E     P E L O T A    - - - - - - - - - - - 
@@ -488,10 +488,33 @@ function Informacion(contenedor1, contenedor2, anchoInformacion, colorFondo)
     this.anchoInformacion = anchoInformacion;
     this.colorFondo = colorFondo;
     this.divInformacion = this.crearInformacion();
+
     this.divJugador1 = this.crearInfoJugador1();
+    this.textoACrear = "Jugador I";
+    this.crearInfoJugador1Texto();
+    this.textoACrear = "Score";
+    this.crearInfoJugador1Texto();
+    this.textoACrear = "00000";
+    this.divPuntuacionJ1 = this.crearInfoJugador1Texto();
+    this.textoACrear = "Round";
+    this.crearInfoJugador1Texto();
+    this.textoACrear = "I";
+    this.divNivelJ1 = this.crearInfoJugador1Texto();
+
     if(contenedor2 != undefined)
     {
-        this.jugador2 = this.crearInfoJugador2();   
+        this.divJugador2 = this.crearInfoJugador2();   
+        this.divJugador2 = this.crearInfoJugador2();
+        this.textoACrear = "Jugador II";
+        this.crearInfoJugador2Texto();
+        this.textoACrear = "Score";
+        this.crearInfoJugador2Texto();
+        this.textoACrear = "00000";
+        this.divPuntuacionJ2 = this.crearInfoJugador2Texto();
+        this.textoACrear = "Round";
+        this.crearInfoJugador2Texto();
+        this.textoACrear = "I";
+        this.divNivelJ2 = this.crearInfoJugador2Texto();
     }
 }
 Informacion.prototype.crearInformacion  = function () 
@@ -520,7 +543,33 @@ Informacion.prototype.crearInfoJugador1  = function ()
     inf.style.margin = "2%";
     inf.style.backgroundColor = this.colorFondo;
     inf.className = "informacion";
-    var texto = document.createTextNode("Jugador I");
+    padre.appendChild(inf);
+    return inf;
+}
+Informacion.prototype.crearInfoJugador1Texto  = function () 
+{
+    var padre = this.divJugador1;
+    var inf = document.createElement("div");
+    inf.style.position = "relative";
+    inf.style.width = 100 + "%";
+    inf.style.height = 15 + "%";
+    inf.style.backgroundColor = this.colorFondo;
+    inf.className = "informacion";
+    var texto = document.createTextNode(this.textoACrear);
+    inf.appendChild(texto);
+    padre.appendChild(inf);
+    return inf;
+}
+Informacion.prototype.crearInfoJugador2Texto  = function () 
+{
+    var padre = this.divJugador2;
+    var inf = document.createElement("div");
+    inf.style.position = "relative";
+    inf.style.width = 100 + "%";
+    inf.style.height = 15 + "%";
+    inf.style.backgroundColor = this.colorFondo;
+    inf.className = "informacion";
+    var texto = document.createTextNode(this.textoACrear);
     inf.appendChild(texto);
     padre.appendChild(inf);
     return inf;
@@ -536,8 +585,6 @@ Informacion.prototype.crearInfoJugador2  = function ()
     inf.style.margin = "2%";
     inf.style.backgroundColor = this.colorFondo;
     inf.className = "informacion";
-    var texto = document.createTextNode("Jugador II");
-    inf.appendChild(texto);
     padre.appendChild(inf);
     return inf;
 }
