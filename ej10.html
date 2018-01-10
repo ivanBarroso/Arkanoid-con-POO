@@ -137,6 +137,8 @@ function Ladrillo(anchoLadrillo, altoLadrillo, posicionX, posicionY, vida, extra
 {
     this.anchoLadrillo = anchoLadrillo;
     this.altoLadrillo = altoLadrillo;
+    this.anchoLadrilloPx = window.innerWidth * contenedora.anchoCajaJuego/100 * anchoLadrillo/100;
+    this.altoLadrilloPx = window.innerHeight * contenedora.altoCajaJuego /100 * altoLadrillo/100;
     this.posicionX = posicionX;
     this.posicionY = posicionY;
     this.vida = vida;
@@ -192,7 +194,10 @@ Ladrillo.prototype.actualizarColor  = function ()
 Ladrillo.prototype.borrarLadrillo  = function () 
 {
     borrarElemento(this.divLadrillo);
-    arrayLadrillos.splice(arrayLadrillos.indexOf(this),1);
+    if(this.arrayLadrillos.indexOf(this) != -1)
+    {
+        this.arrayLadrillos.splice(this.arrayLadrillos.indexOf(this),1);
+    }
 }
 //- - - - - -  - - - - - -   F I N    D E    C L A S E    L A D R I L L O      - - - - - - - - 
 
@@ -209,7 +214,8 @@ function Barra(anchoBarra, altoBarra, posicionX, posicionY, color, colorLinea, c
     this.colorTrianguloLados = colorTrianguloLados;
     this.contenedora = contenedora;
     this.pasoBarra = pasoBarra;
-    this.anchoBarraPx = (window.innerWidth * this.contenedora.anchoCajaJuego/100) * this.anchoBarra/100;
+    this.anchoBarraPx = (window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.anchoBarra/100);
+    this.altoBarraPx = (window.innerHeight * this.contenedora.altoCajaJuego/100 * this.altoBarra/100);
     this.divBarra = this.crearBarra();
     this.divLineaBarra = this.crearLineaBarra();
     this.crearTrianguloCentro = this.crearTrianguloCentro();
@@ -333,22 +339,20 @@ function Arkanoid(numeroJugadores, nivelActual, iniciado)
     this.estaEnMovimiento = false;
     this.intervalo1 = "";
     this.intervalo2 = "";
-    this.barraj1 = "";
-    this.barraj2 = "";
+    
 
     arrayPelotas1 = new Array();
     arrayLadrillos1 = new Array();  
     arrayPelotas2 = new Array();
     arrayLadrillos2 = new Array();  
-
+    barraj1 = "";
+    barraj2 = ""; 
     if(numeroJugadores == 1)
     {
         contenedora = new Contenedora(80, 100, 0, 0, "#d6d6d6");
         informacion = new Informacion(contenedora, null, 20, "#0b0b0b");
-        new Pelota(5, 20, 100, 1, 4, 5, true, false, true, "green", contenedora, arrayPelotas1);
-        new Pelota(5, 100, 100, 1, 4, 5, true, false, true, "yellow", contenedora, arrayPelotas1);
-
-        this.barraj1 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora, 40);
+        new Pelota(5, 500, 600, 1, 4, 5, true, false, true, "green", contenedora, arrayPelotas1);
+        barraj1 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora, 40);
         
     }
     else if(numeroJugadores == 2)
@@ -357,18 +361,20 @@ function Arkanoid(numeroJugadores, nivelActual, iniciado)
         // J1
         contenedora = new Contenedora(40, 100, 0, 0, "#d6d6d6");
         new Pelota(5, 20, 100, 1, 4, 5, true, false, true, "green", contenedora, arrayPelotas1);
-        this.barraj1 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora, 40);
+        barraj1 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora, 40);
         informacion = new Informacion(contenedora, contenedora, 20, "#0b0b0b");
         // J2
         contenedora1 = new Contenedora(40, 100, window.innerWidth* (contenedora.anchoCajaJuego/100 + informacion.anchoInformacion/100), 0, "#d6d6ff");
         new Pelota(5, 100, 200, 1, 4, 5, true, false, true, "red", contenedora1, arrayPelotas2);
-        this.barraj2 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora1, 40);
+        barraj2 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora1, 40);
         if(this.iniciado)
         {
             this.comenzarJuegoJ1();
             this.comenzarJuegoJ2();
         }
     }
+    this.barraj1 = barraj1;
+    this.barraj2 = barraj2;
     this.pintarNivel();
 
 }
@@ -386,7 +392,10 @@ Arkanoid.prototype.pintarNivel  = function ()
                 altoInicial+=6;
                 posicionInicial = contenedora.posicionX +1;
             }
-            new Ladrillo(8, 5, posicionInicial, altoInicial, niveles[this.nivelActual].nivel[i].linea[j], 0, contenedora, arrayLadrillos1);
+            if(niveles[this.nivelActual].nivel[i].linea[j] != -1)
+            {
+                new Ladrillo(8, 5, posicionInicial, altoInicial, niveles[this.nivelActual].nivel[i].linea[j], 0, contenedora, arrayLadrillos1);
+            }
             posicionInicial+= 9;
         }
     }
@@ -414,13 +423,13 @@ Arkanoid.prototype.pintarNivel  = function ()
 Arkanoid.prototype.comenzarJuegoJ1  = function () 
 {
     this.intervalo1 = setInterval(function(){
-        mover(arrayPelotas1);
+        mover(arrayPelotas1, barraj1, arrayLadrillos1);
     }, 10);
 }
 Arkanoid.prototype.comenzarJuegoJ2  = function () 
 {
     this.intervalo2 = setInterval(function(){
-        mover(arrayPelotas2);
+        mover(arrayPelotas2, barraj2, arrayLadrillos2);
     }, 10);
 }
 Arkanoid.prototype.iniciarJuego  = function () 
@@ -598,14 +607,22 @@ function borrarElemento(elemento)
         elemento.parentNode.removeChild(elemento);
     }
 }
-function mover(arrayPelotas) {
+function mover(arrayPelotas, barra, arrayLadrillos) {
     //Si solo hay una pelota
-    
         if(arrayPelotas.length <= 1)
         {
             if(arrayPelotas[0] != undefined)
             {
+
                 comprobarColisionParedes(arrayPelotas[0]);
+                comprobarColisionElemento(arrayPelotas[0], barra, "barra");
+                
+                for(var i = 0; i<arrayLadrillos.length; i++)
+                {
+                    
+                    comprobarColisionElemento(arrayPelotas[0], arrayLadrillos[i], "ladrillo");
+                }
+
                 if(arrayPelotas[0].estaEnMovimiento)
                 {
                     arrayPelotas[0].avanzarY();
@@ -628,6 +645,8 @@ function mover(arrayPelotas) {
                     {
                         comprobarColisionPelotas(arrayPelotas[i], arrayPelotas[j]);
                         comprobarColisionParedes(arrayPelotas[j]);
+                        comprobarColisionElemento(arrayPelotas[j], barra);
+
                     }
                 }
                 if(arrayPelotas[i].estaEnMovimiento)
@@ -775,10 +794,9 @@ function comprobarTecla(elEvento)
                 }
             }    
         }
-	  
-  //Al pulsar la letra p o P
-  switch(String.fromCharCode(evento.charCode))
-  {
+    //Al pulsar la letra p o P
+    switch(String.fromCharCode(evento.charCode))
+    {
     case "p":
     case "P":
         if(!juego.estaEnMovimiento && juego.iniciado)
@@ -809,7 +827,169 @@ function comprobarTecla(elEvento)
             juego.barraj1.moverDerecha();
         }
     break;
+    }
+}
+function comprobarColisionElemento(pelota, elementoActual, tipo)
+{
+
+    //Variables que usa la funcion:
+    var anchoElemento;
+    var altoElemento;
+
+    //Variables en funcion de lo que se comprueba
+    if(tipo == "ladrillo")
+    {
+
+        anchoElemento = elementoActual.anchoLadrilloPx;
+        altoElemento  = elementoActual.altoLadrilloPx;
+        x = window.innerWidth * elementoActual.contenedora.anchoCajaJuego/100 * parseInt(elementoActual.divLadrillo.style.left)/100;
+        y = window.innerHeight * elementoActual.contenedora.altoCajaJuego/100 * parseInt(elementoActual.divLadrillo.style.top)/100; 
+        xDerecha = x + anchoElemento;
+        yAbajo = y + altoElemento;
+    }
+
+    else if(tipo == "barra")
+    {
+        anchoElemento = elementoActual.anchoBarraPx;
+        altoElemento  = elementoActual.altoBarraPx;;
+        //Variables elemento con el que colisiona la pelota
+        x = parseInt(elementoActual.divBarra.style.left);
+        y = parseInt(elementoActual.divBarra.style.top); 
+        xDerecha = x + anchoElemento;
+        yAbajo = y + altoElemento;
+    }
+
+    //Variables de la pelota
+    var pelotaX = parseInt(pelota.divPelota.style.left);
+    var pelotaY = parseInt(pelota.divPelota.style.top);
+    var pelotaXderecha = pelotaX + pelota.anchoYaltoPx;
+    var pelotaYAbajo = pelotaY + pelota.anchoYaltoPx;
+
+
+    var cenXBola = pelotaX + (pelota.radio);
+    var cenYBola = pelotaY + (pelota.radio);
+
+  //Comprueba la colision en la parte superior e inferior
+  for(var i = x + 2; i< x + anchoElemento -2; i+=5)
+  {
+    distanciaBolaElemento = Math.hypot(cenXBola - i, cenYBola - y - altoElemento);
+    //Si colisiona en la parte inferior
+    if(distanciaBolaElemento < pelota.radio && pelota.arribaY)
+    { 
+      if(tipo == "ladrillo")
+      {
+        elementoActual.borrarLadrillo();
+        //Corregir posicion
+        //pelotaY = yAbajo + "px";
+        pelota.arribaY = false;
+      }
+    }
+    //Si colisiona en la parte superior
+    distanciaBolaElemento = Math.hypot(cenXBola - i, cenYBola - y);
+    //pintarColision(x, y + (anchoElemento)/10, "blue", pelota.contenedora)
+    if(distanciaBolaElemento <= parseInt(pelota.divPelota.style.height)/2 + pelota.pasoX && !pelota.arribaY)
+    { 
+      if(tipo == "ladrillo")
+      {
+        elementoActual.borrarLadrillo();
+      }
+      else if(tipo = "barra" && !pelota.arribaY)
+      {
+          if(i >= x  && i < x + ((anchoElemento)/10)*1)
+          {
+            pelota.pasoX = 2;
+            pelota.derechaX = false;
+          }
+          //Entre el 10 y el 40
+          else if(i > x + ((anchoElemento)/10)*1 && i < x + ((anchoElemento)/10)*4)
+          {
+            pelota.pasoX = 1;
+          }
+          //Entre el 40 al 60
+          else if(i > x + ((anchoElemento)/10)*4 && i < x + ((anchoElemento)/10)*6)
+          {
+            pelota.pasoX = 0;
+          }
+          //entre 60 y 90
+          else if(i > x + ((anchoElemento)/10)*6 && i < x + ((anchoElemento)/10)*9)
+          {
+            pelota.pasoX = 1;
+          }
+          //entre 90 y 100 o entre 0 y 10
+          else
+          {
+            pelota.pasoX = 2;
+            pelota.derechaX = true;
+          }
+          //intervaloCalculado = parseInt((Math.sqrt(Math.pow(pasoXPelota, 2) + Math.pow(pasoYPelota, 2))) * 2.0);
+          //actualizarIntervalo(intervaloCalculado);
+      }
+      pelota.arribaY = true;
+    }
   }
+  
+  //Comprobar choques laterales
+  for(var i = y; i< yAbajo; i+=3)
+  {
+    //Si choca en la izquierda
+    distanciaBolaElemento = Math.hypot(cenXBola - x, cenYBola - i);
+    if(distanciaBolaElemento < pelota.radio)
+    { 
+      if(tipo == "ladrillo")
+      {
+        elementoActual.borrarLadrillo();
+        break;
+      }
+      else if(tipo == "barra" && !pelota.arribaY)
+      {
+        alert("lateral i")
+        pelota.arribaY = true;
+        pelota.derechaX = true;
+        pelota.pasoX = 4;
+      }
+      
+      pelota.derechaX = !pelota.derechaX;
+      
+      break;
+    }
+
+    //Si colisiona en la parte derecha
+    distanciaBolaElemento = Math.hypot(cenXBola - x - anchoElemento, cenYBola - i);
+    if(distanciaBolaElemento < pelota.radio)
+    { 
+      if(tipo == "ladrillo")
+      {
+        elementoActual.borrarLadrillo();
+      }
+      else if(tipo == "barra" && !pelota.arribaY)
+      {
+        alert("lateral d")
+        pelota.pasoX = 4;
+        pelota.derechaX = true;
+        pelota.arribaY = true;
+      }
+      break;
+    }
+  }
+}
+// P A R A   T E S T E A R
+function pintarColision(x, y, color, contenedora)
+{
+    var colision = document.createElement("div");
+    colision.style.backgroundColor = color;
+    colision.style.width = 2 + "px";
+    colision.style.height = 2 + "px";
+    colision.style.position = "absolute";
+    colision.className = "colision";
+    colision.style.left = x + "px";
+    colision.style.top = y + "px";
+    contenedora.divContenedora.appendChild(colision);
+
+    setTimeout(function()
+    {
+        borrarElemento(colision)
+    }
+        , 1000);
 }
 
 </script>
