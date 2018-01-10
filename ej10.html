@@ -199,7 +199,7 @@ Ladrillo.prototype.borrarLadrillo  = function ()
 //- - - - - -  - - - - - -   F I N    D E    C L A S E    L A D R I L L O      - - - - - - - - 
 
 // - - - - - - - - - -     C L A S E     B A R R A     - - - - - - - - - - - 
-function Barra(anchoBarra, altoBarra, posicionX, posicionY, color, colorLinea, colorTrianguloCentro, colorTrianguloLados, contenedora)
+function Barra(anchoBarra, altoBarra, posicionX, posicionY, color, colorLinea, colorTrianguloCentro, colorTrianguloLados, contenedora, pasoBarra)
 {
     this.anchoBarra = anchoBarra;
     this.altoBarra = altoBarra;
@@ -210,12 +210,13 @@ function Barra(anchoBarra, altoBarra, posicionX, posicionY, color, colorLinea, c
     this.colorTrianguloCentro = colorTrianguloCentro;
     this.colorTrianguloLados = colorTrianguloLados;
     this.contenedora = contenedora;
+    this.pasoBarra = pasoBarra;
+    this.anchoBarraPx = (window.innerWidth * this.contenedora.anchoCajaJuego/100) * this.anchoBarra/100;
     this.divBarra = this.crearBarra();
     this.divLineaBarra = this.crearLineaBarra();
     this.crearTrianguloCentro = this.crearTrianguloCentro();
     this.divTrianguloIzquierda = this.crearTrianguloIzquierda();
     this.divTrianguloDerecha = this.crearTrianguloDerecha();
-
 }
 Barra.prototype.crearBarra  = function () 
 {
@@ -224,7 +225,7 @@ Barra.prototype.crearBarra  = function ()
     barra.style.height = this.altoBarra + "%";
     barra.style.position = "absolute";
     barra.className = "barra";
-    barra.style.left = window.innerWidth * (this.contenedora.anchoCajaJuego/100)/2 - this.anchoBarra/2 + "px";
+    barra.style.left = window.innerWidth * (this.contenedora.anchoCajaJuego/100)/2 - this.anchoBarraPx/2 + "px";
     barra.style.top = window.innerHeight * (this.contenedora.altoCajaJuego/100) - window.innerHeight * this.altoBarra/50 + "px";
     barra.style.backgroundColor = this.color;
     padre = this.contenedora.divContenedora;
@@ -304,6 +305,26 @@ Barra.prototype.crearTrianguloDerecha  = function ()
     this.divBarra.appendChild(trianguloBarraIzquierda);
     return trianguloBarraIzquierda;
 }
+Barra.prototype.moverDerecha = function()
+{
+    var barraFuturo = parseInt(this.divBarra.style.left) + this.pasoBarra;
+    var bordeDerechoContenedora = window.innerWidth * this.contenedora.anchoCajaJuego/100;
+
+    if(barraFuturo < bordeDerechoContenedora - this.anchoBarraPx/2)
+    {
+        this.divBarra.style.left = barraFuturo + "px";
+    }
+}
+Barra.prototype.moverIzquierda = function()
+{
+    var barraFuturo = parseInt(this.divBarra.style.left) - this.pasoBarra;
+    var bordeIzquierdoContenedora = parseInt(this.contenedora.posicionX);
+
+    if(barraFuturo >= bordeIzquierdoContenedora - this.anchoBarraPx/2)
+    {
+        this.divBarra.style.left = barraFuturo + "px";
+    }
+}
 //- - - - - -  - - - - - -   F I N    D E    C L A S E    B A R R A      - - - - - - - - 
 
 // - - - - - - - - - -     C L A S E     A R K A N O I D     - - - - - - - - - - - 
@@ -315,6 +336,8 @@ function Arkanoid(numeroJugadores, nivelActual, iniciado)
     this.estaEnMovimiento = false;
     this.intervalo1 = "";
     this.intervalo2 = "";
+    this.barraj1 = "";
+    this.barraj2 = "";
 
     arrayPelotas1 = new Array();
     arrayLadrillos1 = new Array();  
@@ -334,12 +357,12 @@ function Arkanoid(numeroJugadores, nivelActual, iniciado)
         // J1
         contenedora = new Contenedora(40, 100, 0, 0, "#d6d6d6");
         new Pelota(5, 20, 100, 1, 4, 5, true, false, true, "green", contenedora, arrayPelotas1);
-        new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora);
+        this.barraj1 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora, 40);
         informacion = new Informacion(contenedora, contenedora, 20, "#0b0b0b");
         // J2
         contenedora1 = new Contenedora(40, 100, window.innerWidth* (contenedora.anchoCajaJuego/100 + informacion.anchoInformacion/100), 0, "#d6d6ff");
         new Pelota(5, 100, 200, 1, 4, 5, true, false, true, "red", contenedora1, arrayPelotas2);
-        new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora1);
+        this.barraj2 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora1, 40);
         if(this.iniciado)
         {
             this.comenzarJuegoJ1();
@@ -678,10 +701,10 @@ function comprobarTecla(elEvento)
     switch (evento.keyCode){
     //flecha izquierda
     case 37:
-        base.style.left = parseInt(base.style.left) - pasoBarra + "px";
-        if(!estaEnMovimiento)
+        
+        if(juego.estaEnMovimiento)
         {
-        ponerEncimaCentroBase(pelota);
+            juego.barraj1.moverIzquierda();
         }
 
         //PONER TOPES
@@ -689,10 +712,10 @@ function comprobarTecla(elEvento)
     break;
     //flecha derecha
     case 39:
-        base.style.left = parseInt(base.style.left) + pasoBarra + "px";
-        if(!estaEnMovimiento)
+        
+        if(juego.estaEnMovimiento)
         {
-        ponerEncimaCentroBase(pelota);
+            juego.barraj1.moverDerecha();
         }
         // PONER TOPES
     }
