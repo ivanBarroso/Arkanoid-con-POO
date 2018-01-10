@@ -12,8 +12,9 @@
 
 window.onload = function () {
 
-    juego = new Arkanoid(1, 0, false);
+    juego = new Arkanoid(2, 0, false);
     document.onkeypress = comprobarTecla;
+    juego.iniciarJuego();
  }
 // - - - - - - - - - -     C L A S E     P E L O T A    - - - - - - - - - - - 
 
@@ -351,8 +352,9 @@ function Arkanoid(numeroJugadores, nivelActual, iniciado)
     {
         contenedora = new Contenedora(80, 100, 0, 0, "#d6d6d6");
         informacion = new Informacion(contenedora, null, 20, "#0b0b0b");
-        new Pelota(5, 500, 600, 1, 4, 5, true, false, true, "green", contenedora, arrayPelotas1);
         barraj1 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora, 40);
+        new Pelota(5, 600, 1000, 1, 4, 5, true, false, true, "green", contenedora, arrayPelotas1);
+
         
     }
     else if(numeroJugadores == 2)
@@ -360,13 +362,13 @@ function Arkanoid(numeroJugadores, nivelActual, iniciado)
 
         // J1
         contenedora = new Contenedora(40, 100, 0, 0, "#d6d6d6");
-        new Pelota(5, 20, 100, 1, 4, 5, true, false, true, "green", contenedora, arrayPelotas1);
         barraj1 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora, 40);
+        new Pelota(5, parseInt(barraj1.divBarra.style.left)*1.2, parseInt(barraj1.divBarra.style.top)*0.96, 1, 4, 5, true, true, true, "green", contenedora, arrayPelotas1);
         informacion = new Informacion(contenedora, contenedora, 20, "#0b0b0b");
         // J2
         contenedora1 = new Contenedora(40, 100, window.innerWidth* (contenedora.anchoCajaJuego/100 + informacion.anchoInformacion/100), 0, "#d6d6ff");
-        new Pelota(5, 100, 200, 1, 4, 5, true, false, true, "red", contenedora1, arrayPelotas2);
         barraj2 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora1, 40);
+        new Pelota(5, parseInt(barraj2.divBarra.style.left)*1.2, parseInt(barraj2.divBarra.style.top)*0.96, 1, 4, 5, true, true, true, "red", contenedora1, arrayPelotas2);
         if(this.iniciado)
         {
             this.comenzarJuegoJ1();
@@ -414,7 +416,10 @@ Arkanoid.prototype.pintarNivel  = function ()
                     altoInicial+=6;
                     posicionInicial = contenedora.posicionX +1;
                 }
-                new Ladrillo(8, 5, posicionInicial, altoInicial, niveles[this.nivelActual].nivel[i].linea[j], 0, contenedora1, arrayLadrillos1);
+                if(niveles[this.nivelActual].nivel[i].linea[j] != -1)
+                {
+                    new Ladrillo(8, 5, posicionInicial, altoInicial, niveles[this.nivelActual].nivel[i].linea[j], 0, contenedora1, arrayLadrillos2);
+                }
                 posicionInicial+= 9;
             }
         }
@@ -618,8 +623,7 @@ function mover(arrayPelotas, barra, arrayLadrillos) {
                 comprobarColisionElemento(arrayPelotas[0], barra, "barra");
                 
                 for(var i = 0; i<arrayLadrillos.length; i++)
-                {
-                    
+                {  
                     comprobarColisionElemento(arrayPelotas[0], arrayLadrillos[i], "ladrillo");
                 }
 
@@ -645,8 +649,11 @@ function mover(arrayPelotas, barra, arrayLadrillos) {
                     {
                         comprobarColisionPelotas(arrayPelotas[i], arrayPelotas[j]);
                         comprobarColisionParedes(arrayPelotas[j]);
-                        comprobarColisionElemento(arrayPelotas[j], barra);
-
+                        comprobarColisionElemento(arrayPelotas[j], barra, "barra");
+                        for(var i = 0; i<arrayLadrillos.length; i++)
+                        {  
+                            comprobarColisionElemento(arrayPelotas[j], arrayLadrillos[i], "ladrillo");
+                        }
                     }
                 }
                 if(arrayPelotas[i].estaEnMovimiento)
@@ -839,7 +846,6 @@ function comprobarColisionElemento(pelota, elementoActual, tipo)
     //Variables en funcion de lo que se comprueba
     if(tipo == "ladrillo")
     {
-
         anchoElemento = elementoActual.anchoLadrilloPx;
         altoElemento  = elementoActual.altoLadrilloPx;
         x = window.innerWidth * elementoActual.contenedora.anchoCajaJuego/100 * parseInt(elementoActual.divLadrillo.style.left)/100;
@@ -869,108 +875,106 @@ function comprobarColisionElemento(pelota, elementoActual, tipo)
     var cenXBola = pelotaX + (pelota.radio);
     var cenYBola = pelotaY + (pelota.radio);
 
-  //Comprueba la colision en la parte superior e inferior
-  for(var i = x + 2; i< x + anchoElemento -2; i+=5)
-  {
+    //Comprueba la colision en la parte superior e inferior
+    for(var i = x + 2; i< x + anchoElemento -2; i+=5)
+    {
     distanciaBolaElemento = Math.hypot(cenXBola - i, cenYBola - y - altoElemento);
     //Si colisiona en la parte inferior
     if(distanciaBolaElemento < pelota.radio && pelota.arribaY)
     { 
-      if(tipo == "ladrillo")
-      {
-        elementoActual.borrarLadrillo();
-        //Corregir posicion
-        //pelotaY = yAbajo + "px";
-        pelota.arribaY = false;
-      }
+        if(tipo == "ladrillo")
+        {
+            elementoActual.borrarLadrillo();
+            //Corregir posicion
+            //pelotaY = yAbajo + "px";
+            pelota.arribaY = false;
+        }
     }
     //Si colisiona en la parte superior
     distanciaBolaElemento = Math.hypot(cenXBola - i, cenYBola - y);
     //pintarColision(x, y + (anchoElemento)/10, "blue", pelota.contenedora)
     if(distanciaBolaElemento <= parseInt(pelota.divPelota.style.height)/2 + pelota.pasoX && !pelota.arribaY)
     { 
-      if(tipo == "ladrillo")
-      {
+        if(tipo == "ladrillo")
+        {
         elementoActual.borrarLadrillo();
-      }
-      else if(tipo = "barra" && !pelota.arribaY)
-      {
-          if(i >= x  && i < x + ((anchoElemento)/10)*1)
-          {
+        }
+        else if(tipo = "barra" && !pelota.arribaY)
+        {
+            if(i >= x  && i < x + ((anchoElemento)/10)*1)
+            {
             pelota.pasoX = 2;
             pelota.derechaX = false;
-          }
-          //Entre el 10 y el 40
-          else if(i > x + ((anchoElemento)/10)*1 && i < x + ((anchoElemento)/10)*4)
-          {
+            }
+            //Entre el 10 y el 40
+            else if(i > x + ((anchoElemento)/10)*1 && i < x + ((anchoElemento)/10)*4)
+            {
             pelota.pasoX = 1;
-          }
-          //Entre el 40 al 60
-          else if(i > x + ((anchoElemento)/10)*4 && i < x + ((anchoElemento)/10)*6)
-          {
+            }
+            //Entre el 40 al 60
+            else if(i > x + ((anchoElemento)/10)*4 && i < x + ((anchoElemento)/10)*6)
+            {
             pelota.pasoX = 0;
-          }
-          //entre 60 y 90
-          else if(i > x + ((anchoElemento)/10)*6 && i < x + ((anchoElemento)/10)*9)
-          {
+            }
+            //entre 60 y 90
+            else if(i > x + ((anchoElemento)/10)*6 && i < x + ((anchoElemento)/10)*9)
+            {
             pelota.pasoX = 1;
-          }
-          //entre 90 y 100 o entre 0 y 10
-          else
-          {
+            }
+            //entre 90 y 100 o entre 0 y 10
+            else
+            {
             pelota.pasoX = 2;
             pelota.derechaX = true;
-          }
-          //intervaloCalculado = parseInt((Math.sqrt(Math.pow(pasoXPelota, 2) + Math.pow(pasoYPelota, 2))) * 2.0);
-          //actualizarIntervalo(intervaloCalculado);
-      }
-      pelota.arribaY = true;
+            }
+            //intervaloCalculado = parseInt((Math.sqrt(Math.pow(pasoXPelota, 2) + Math.pow(pasoYPelota, 2))) * 2.0);
+            //actualizarIntervalo(intervaloCalculado);
+        }
+        pelota.arribaY = true;
     }
-  }
-  
-  //Comprobar choques laterales
-  for(var i = y; i< yAbajo; i+=3)
-  {
+    }
+
+    //Comprobar choques laterales
+    for(var i = y; i< yAbajo; i+=3)
+    {
     //Si choca en la izquierda
     distanciaBolaElemento = Math.hypot(cenXBola - x, cenYBola - i);
     if(distanciaBolaElemento < pelota.radio)
     { 
-      if(tipo == "ladrillo")
-      {
-        elementoActual.borrarLadrillo();
+        if(tipo == "ladrillo")
+        {
+            elementoActual.borrarLadrillo();
+            break;
+        }
+        else if(tipo == "barra" && !pelota.arribaY)
+        {
+            pelota.arribaY = true;
+            pelota.derechaX = true;
+            pelota.pasoX = 4;
+        }
+        
+        pelota.derechaX = !pelota.derechaX;
+        
         break;
-      }
-      else if(tipo == "barra" && !pelota.arribaY)
-      {
-        alert("lateral i")
-        pelota.arribaY = true;
-        pelota.derechaX = true;
-        pelota.pasoX = 4;
-      }
-      
-      pelota.derechaX = !pelota.derechaX;
-      
-      break;
     }
 
     //Si colisiona en la parte derecha
     distanciaBolaElemento = Math.hypot(cenXBola - x - anchoElemento, cenYBola - i);
     if(distanciaBolaElemento < pelota.radio)
     { 
-      if(tipo == "ladrillo")
-      {
-        elementoActual.borrarLadrillo();
-      }
-      else if(tipo == "barra" && !pelota.arribaY)
-      {
-        alert("lateral d")
-        pelota.pasoX = 4;
-        pelota.derechaX = true;
-        pelota.arribaY = true;
-      }
-      break;
+        if(tipo == "ladrillo")
+        {
+            elementoActual.borrarLadrillo();
+        }
+        else if(tipo == "barra" && !pelota.arribaY)
+        {
+            pelota.pasoX = 4;
+            pelota.derechaX = true;
+            pelota.arribaY = true;
+        }
+        break;
     }
-  }
+    }
 }
 // P A R A   T E S T E A R
 function pintarColision(x, y, color, contenedora)
