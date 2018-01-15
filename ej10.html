@@ -18,7 +18,7 @@ window.onload = function () {
  }
 // - - - - - - - - - -     C L A S E     P E L O T A    - - - - - - - - - - - 
 
-function Pelota(anchoYalto, x, y, pasoX, pasoY, intervalo, derechaX, arribaY, estaEnMovimiento, color, contenedora, arrayPelotas) {
+function Pelota(anchoYalto, x, y, pasoX, pasoY, maximoPaso, intervalo, derechaX, arribaY, estaEnMovimiento, color, contenedora, arrayPelotas) {
     this.anchoYalto = anchoYalto;
     this.anchoYaltoPx = window.innerWidth * contenedora.anchoCajaJuego/100 * (anchoYalto/100);
     this.radio = this.anchoYaltoPx / 2;
@@ -26,6 +26,7 @@ function Pelota(anchoYalto, x, y, pasoX, pasoY, intervalo, derechaX, arribaY, es
     this.y = y;
     this.pasoX = pasoX;
     this.pasoY = pasoY;
+    this.maximoPaso = maximoPaso;
     this.intervalo = intervalo;
     this.derechaX = derechaX;
     this.arribaY = arribaY;
@@ -129,6 +130,14 @@ Pelota.prototype.comprobarPosicion  = function ()
             }
             while( distanciaEntrePelotas <  this.radio + ((this.pasoX + this.pasoY) /2) + this.arrayPelotas[i].radio  + ((this.arrayPelotas[i].pasoX + this.arrayPelotas[i].pasoY) /2));
         }
+    }
+}
+Pelota.prototype.modificarPaso = function (nuevoPaso) 
+{
+    this.paso += nuevoPaso;
+    if(this.paso > this.maximoPaso)
+    {
+        this.paso = maximoPaso;
     }
 }
 // - - - - - F I N    D E    L A   C L A S E    P E L O T A  - - - - - - -
@@ -244,7 +253,7 @@ Barra.prototype.crearLineaBarra  = function ()
     lineaBarra.style.height = "10%";
     lineaBarra.style.position = "absolute";
     lineaBarra.className = "lineaBarra";
-    lineaBarra.style.zIndex = -1;
+    lineaBarra.style.zIndex = 1;
     lineaBarra.style.backgroundColor = this.colorLinea;
     padre = this.contenedora.divContenedora;
     this.divBarra.appendChild(lineaBarra);
@@ -265,7 +274,7 @@ Barra.prototype.crearTrianguloCentro  = function ()
     trianguloBarraCentro.style.left = this.anchoBarra/2 - this.anchoBarra/10 + "px";
     trianguloBarraCentro.style.top = -this.anchoBarra/100 - this.altoBarra/2+ "px";
     trianguloBarraCentro.className = "trianguloBarraCentro";
-    trianguloBarraCentro.style.zIndex = -1;
+    trianguloBarraCentro.style.zIndex = 1;
     padre = document.getElementById("contenedor");
     this.divBarra.appendChild(trianguloBarraCentro);
     return trianguloBarraCentro;
@@ -275,17 +284,16 @@ Barra.prototype.crearTrianguloIzquierda  = function ()
     var trianguloBarraIzquierda = document.createElement("div");
     trianguloBarraIzquierda.style.width = "0px";
     trianguloBarraIzquierda.style.height = "0px";
-    trianguloBarraIzquierda.style.borderRight= this.anchoBarra/10 +"px solid transparent";
-    trianguloBarraIzquierda.style.borderLeft= this.anchoBarra/10 +"px solid transparent";
-    trianguloBarraIzquierda.style.borderTop= this.anchoBarra/100 +"px solid transparent";
-    trianguloBarraIzquierda.style.borderBottom = this.altoBarra/2 +"px solid" + this.colorTrianguloLados; 
-    
+    trianguloBarraIzquierda.style.borderRight= parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.anchoBarra/100) +"px solid transparent";
+    trianguloBarraIzquierda.style.borderLeft=  parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.anchoBarra/100) +"px solid transparent";
+    trianguloBarraIzquierda.style.borderTop=   parseInt(window.innerHeight * this.contenedora.altoCajaJuego/100 * this.altoBarra/100)*3 +"px solid transparent";
+    trianguloBarraIzquierda.style.borderBottom =parseInt(window.innerHeight * this.contenedora.altoCajaJuego/100 * this.altoBarra/100) +" px solid " + this.colorTrianguloLados;
     trianguloBarraIzquierda.style.position = "absolute";
     //Poner a la izquierda y ponerlo encima de la barra
     trianguloBarraIzquierda.style.left = 0 + "px";
     trianguloBarraIzquierda.style.top = -this.anchoBarra/100 - this.altoBarra/2+ "px";
     trianguloBarraIzquierda.className = "trianguloBarraIzquierda";
-    trianguloBarraIzquierda.style.zIndex = -1;
+    trianguloBarraIzquierda.style.zIndex = 2;
     padre = document.getElementById("contenedor");
     this.divBarra.appendChild(trianguloBarraIzquierda);
     return trianguloBarraIzquierda;
@@ -302,10 +310,10 @@ Barra.prototype.crearTrianguloDerecha  = function ()
     
     trianguloBarraIzquierda.style.position = "absolute";
     //Poner a la izquierda y ponerlo encima de la barra
-    trianguloBarraIzquierda.style.left = this.anchoBarra - (this.anchoBarra/5) + "px";
+    trianguloBarraIzquierda.style.left = parseInt(this.divBarra.style.left) - (this.anchoBarra/5) + "px";
     trianguloBarraIzquierda.style.top = -this.anchoBarra/100 - this.altoBarra/2+ "px";
-    trianguloBarraIzquierda.className = "trianguloBarraIzquierda";
-    trianguloBarraIzquierda.style.zIndex = -1;
+    trianguloBarraIzquierda.className = "trianguloBarraDerecha";
+    trianguloBarraIzquierda.style.zIndex = 1;
     padre = document.getElementById("contenedor");
     this.divBarra.appendChild(trianguloBarraIzquierda);
     return trianguloBarraIzquierda;
@@ -353,7 +361,7 @@ function Arkanoid(numeroJugadores, nivelActual, iniciado)
         contenedora = new Contenedora(80, 100, 0, 0, "#d6d6d6");
         informacion = new Informacion(contenedora, null, 20, "#0b0b0b");
         barraj1 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora, 40);
-        new Pelota(5, 600, 1000, 1, 4, 5, true, false, true, "green", contenedora, arrayPelotas1);
+        new Pelota(5, 600, 1000, 1, 4, 5, 5, true, false, true, "green", contenedora, arrayPelotas1);
 
         
     }
@@ -363,12 +371,12 @@ function Arkanoid(numeroJugadores, nivelActual, iniciado)
         // J1
         contenedora = new Contenedora(40, 100, 0, 0, "#d6d6d6");
         barraj1 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora, 40);
-        new Pelota(5, parseInt(barraj1.divBarra.style.left)*1.2, parseInt(barraj1.divBarra.style.top)*0.96, 1, 4, 5, false, true, true, "green", contenedora, arrayPelotas1);
+        new Pelota(5, parseInt(barraj1.divBarra.style.left)*1.2, parseInt(barraj1.divBarra.style.top)*0.96, 1, 4, 5, 5, false, true, true, "green", contenedora, arrayPelotas1);
         informacion = new Informacion(contenedora, contenedora, 20, "#0b0b0b");
         // J2
         contenedora1 = new Contenedora(40, 100, window.innerWidth* (contenedora.anchoCajaJuego/100 + informacion.anchoInformacion/100), 0, "#d6d6ff");
         barraj2 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora1, 40);
-        new Pelota(5, parseInt(barraj2.divBarra.style.left)*1.2, parseInt(barraj2.divBarra.style.top)*0.96, 1, 4, 5, true, true, true, "red", contenedora1, arrayPelotas2);
+        new Pelota(5, parseInt(barraj2.divBarra.style.left)*1.2, parseInt(barraj2.divBarra.style.top)*0.96, 1, 4, 5, 5, true, true, true, "red", contenedora1, arrayPelotas2);
         if(this.iniciado)
         {
             this.comenzarJuegoJ1();
@@ -903,28 +911,28 @@ function comprobarColisionElemento(pelota, elementoActual, tipo)
         {
             if(i >= x  && i < x + ((anchoElemento)/10)*1)
             {
-            pelota.pasoX = 2;
-            pelota.derechaX = false;
+                pelota.modificarPaso(2);
+                pelota.derechaX = false;
             }
             //Entre el 10 y el 40
             else if(i > x + ((anchoElemento)/10)*1 && i < x + ((anchoElemento)/10)*4)
             {
-            pelota.pasoX = 1;
+                pelota.modificarPaso(1);
             }
             //Entre el 40 al 60
             else if(i > x + ((anchoElemento)/10)*4 && i < x + ((anchoElemento)/10)*6)
             {
-            pelota.pasoX = 0;
+                pelota.modificarPaso(-1);
             }
             //entre 60 y 90
             else if(i > x + ((anchoElemento)/10)*6 && i < x + ((anchoElemento)/10)*9)
             {
-            pelota.pasoX = 1;
+                pelota.modificarPaso(1);
             }
             //entre 90 y 100 o entre 0 y 10
             else
             {
-            pelota.pasoX = 2;
+                pelota.modificarPaso(2);
             pelota.derechaX = true;
             }
             //intervaloCalculado = parseInt((Math.sqrt(Math.pow(pasoXPelota, 2) + Math.pow(pasoYPelota, 2))) * 2.0);
