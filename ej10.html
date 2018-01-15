@@ -675,19 +675,19 @@ function comprobarColisionParedes(pelota) {
     if(pelota != undefined)
     {
     //Choca arriba
-    if (pelota.y - pelota.pasoY <= this.contenedora.posicionX && pelota.arribaY) {
+    if (pelota.y - pelota.pasoY - pelota.pasoX <= this.contenedora.posicionX && pelota.arribaY) {
             pelota.arribaY = false;
         }
         //Choca abajo
-        else if (pelota.pasoY + pelota.y > (window.innerHeight * (pelota.contenedora.altoCajaJuego/100) - pelota.anchoYaltoPx) && !pelota.arribaY) {
+        else if (pelota.pasoY + pelota.y + pelota.pasoX > (window.innerHeight * (pelota.contenedora.altoCajaJuego/100) - pelota.anchoYaltoPx) && !pelota.arribaY) {
         pelota.arribaY = true;
         }
         //Choca derecha
-        if (pelota.pasoX + pelota.x >= (window.innerWidth* (contenedora.anchoCajaJuego/100) - pelota.anchoYaltoPx) && pelota.derechaX) {
+        if (pelota.pasoX + pelota.pasoY + pelota.x >= (window.innerWidth* (contenedora.anchoCajaJuego/100) - pelota.anchoYaltoPx) && pelota.derechaX) {
             pelota.derechaX = !pelota.derechaX;
         }
         //Choca izquierda
-        else if (pelota.x - pelota.pasoX <= 0 && !pelota.derechaX) {
+        else if (pelota.x - pelota.pasoY- pelota.pasoX <= 0 && !pelota.derechaX) {
             pelota.derechaX = !pelota.derechaX;
         }
     }
@@ -879,8 +879,8 @@ function comprobarColisionElemento(pelota, elementoActual, tipo)
     for(var i = x + 2; i< x + anchoElemento -2; i+=5)
     {
     distanciaBolaElemento = Math.hypot(cenXBola - i, cenYBola - y - altoElemento);
-    //Si colisiona en la parte inferior
-    if(distanciaBolaElemento < pelota.radio && pelota.arribaY)
+    //Si va a colisionar en la parte inferior
+    if(distanciaBolaElemento - pelota.pasoY < pelota.radio && pelota.arribaY)
     { 
         if(tipo == "ladrillo")
         {
@@ -890,14 +890,14 @@ function comprobarColisionElemento(pelota, elementoActual, tipo)
             pelota.arribaY = false;
         }
     }
-    //Si colisiona en la parte superior
+    //Si va a colisiona en la parte superior
     distanciaBolaElemento = Math.hypot(cenXBola - i, cenYBola - y);
     //pintarColision(x, y + (anchoElemento)/10, "blue", pelota.contenedora)
-    if(distanciaBolaElemento <= parseInt(pelota.divPelota.style.height)/2 + pelota.pasoX && !pelota.arribaY)
+    if(distanciaBolaElemento - pelota.pasoX <= parseInt(pelota.divPelota.style.height)/2 + pelota.pasoX && !pelota.arribaY)
     { 
         if(tipo == "ladrillo")
         {
-        elementoActual.borrarLadrillo();
+            elementoActual.borrarLadrillo();
         }
         else if(tipo = "barra" && !pelota.arribaY)
         {
@@ -939,11 +939,12 @@ function comprobarColisionElemento(pelota, elementoActual, tipo)
     {
     //Si choca en la izquierda
     distanciaBolaElemento = Math.hypot(cenXBola - x, cenYBola - i);
-    if(distanciaBolaElemento < pelota.radio)
+    if(distanciaBolaElemento - pelota.pasoX - pelota.pasoY < pelota.radio)
     { 
         if(tipo == "ladrillo")
         {
             elementoActual.borrarLadrillo();
+            pelota.derechaX = false;
             break;
         }
         else if(tipo == "barra" && !pelota.arribaY)
@@ -951,16 +952,14 @@ function comprobarColisionElemento(pelota, elementoActual, tipo)
             pelota.arribaY = true;
             pelota.derechaX = true;
             pelota.pasoX = 4;
+            pelota.derechaX = !pelota.derechaX;
         }
-        
-        pelota.derechaX = !pelota.derechaX;
-        
         break;
     }
 
     //Si colisiona en la parte derecha
     distanciaBolaElemento = Math.hypot(cenXBola - x - anchoElemento, cenYBola - i);
-    if(distanciaBolaElemento < pelota.radio)
+    if(distanciaBolaElemento - pelota.pasoX - pelota.pasoY < pelota.radio)
     { 
         if(tipo == "ladrillo")
         {
@@ -995,7 +994,6 @@ function pintarColision(x, y, color, contenedora)
     }
         , 1000);
 }
-
 </script>
 
 <body>
