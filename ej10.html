@@ -264,15 +264,15 @@ Barra.prototype.crearTrianguloCentro  = function ()
     var trianguloBarraCentro = document.createElement("div");
     trianguloBarraCentro.style.width = "0px";
     trianguloBarraCentro.style.height = "0px";
-    trianguloBarraCentro.style.borderRight= this.anchoBarra/10 +"px solid transparent";
-    trianguloBarraCentro.style.borderLeft= this.anchoBarra/10 +"px solid transparent";
-    trianguloBarraCentro.style.borderTop= this.anchoBarra/100 +"px solid transparent";
-    trianguloBarraCentro.style.borderBottom = this.altoBarra/2 +"px solid" + this.colorTrianguloCentro; 
+    trianguloBarraCentro.style.borderRight= parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.anchoBarra/100)/10 +"px solid transparent";
+    trianguloBarraCentro.style.borderLeft=  parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.anchoBarra/100)/10 +"px solid transparent";
+    trianguloBarraCentro.style.borderTop=   parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.altoBarra/100) +"px solid transparent";
+    trianguloBarraCentro.style.borderBottom=parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.altoBarra/100) +"px solid "+this.colorTrianguloCentro;
     
     trianguloBarraCentro.style.position = "absolute";
     //Centrarlo y ponerlo encima de la barra
-    trianguloBarraCentro.style.left = this.anchoBarra/2 - this.anchoBarra/10 + "px";
-    trianguloBarraCentro.style.top = -this.anchoBarra/100 - this.altoBarra/2+ "px";
+    trianguloBarraCentro.style.left = "42%";
+    trianguloBarraCentro.style.top = "-10px";
     trianguloBarraCentro.className = "trianguloBarraCentro";
     trianguloBarraCentro.style.zIndex = 1;
     padre = document.getElementById("contenedor");
@@ -284,14 +284,16 @@ Barra.prototype.crearTrianguloIzquierda  = function ()
     var trianguloBarraIzquierda = document.createElement("div");
     trianguloBarraIzquierda.style.width = "0px";
     trianguloBarraIzquierda.style.height = "0px";
-    trianguloBarraIzquierda.style.borderRight= parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.anchoBarra/100) +"px solid transparent";
-    trianguloBarraIzquierda.style.borderLeft=  parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.anchoBarra/100) +"px solid transparent";
-    trianguloBarraIzquierda.style.borderTop=   parseInt(window.innerHeight * this.contenedora.altoCajaJuego/100 * this.altoBarra/100)*3 +"px solid transparent";
-    trianguloBarraIzquierda.style.borderBottom =parseInt(window.innerHeight * this.contenedora.altoCajaJuego/100 * this.altoBarra/100) +" px solid " + this.colorTrianguloLados;
+    trianguloBarraIzquierda.style.borderRight= parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.anchoBarra/100)/10 +"px solid transparent";
+    trianguloBarraIzquierda.style.borderLeft=  parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.anchoBarra/100)/10 +"px solid transparent";
+    trianguloBarraIzquierda.style.borderTop=   parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.altoBarra/100) +"px solid transparent";
+    trianguloBarraIzquierda.style.borderBottom=parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.altoBarra/100) +"px solid "+this.colorTrianguloLados;
     trianguloBarraIzquierda.style.position = "absolute";
+
+
     //Poner a la izquierda y ponerlo encima de la barra
     trianguloBarraIzquierda.style.left = 0 + "px";
-    trianguloBarraIzquierda.style.top = -this.anchoBarra/100 - this.altoBarra/2+ "px";
+    trianguloBarraIzquierda.style.top = "-10px";
     trianguloBarraIzquierda.className = "trianguloBarraIzquierda";
     trianguloBarraIzquierda.style.zIndex = 2;
     padre = document.getElementById("contenedor");
@@ -303,17 +305,19 @@ Barra.prototype.crearTrianguloDerecha  = function ()
     var trianguloBarraIzquierda = document.createElement("div");
     trianguloBarraIzquierda.style.width = "0px";
     trianguloBarraIzquierda.style.height = "0px";
-    trianguloBarraIzquierda.style.borderRight= this.anchoBarra/10 +"px solid transparent";
-    trianguloBarraIzquierda.style.borderLeft= this.anchoBarra/10 +"px solid transparent";
-    trianguloBarraIzquierda.style.borderTop= this.anchoBarra/100 +"px solid transparent";
-    trianguloBarraIzquierda.style.borderBottom = this.altoBarra/2 +"px solid" + this.colorTrianguloLados; 
-    
+    trianguloBarraIzquierda.style.borderRight= parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.anchoBarra/100)/10 +"px solid transparent";
+    trianguloBarraIzquierda.style.borderLeft=  parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.anchoBarra/100)/10 +"px solid transparent";
+    trianguloBarraIzquierda.style.borderTop=   parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.altoBarra/100) +"px solid transparent";
+    trianguloBarraIzquierda.style.borderBottom=parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.altoBarra/100) +"px solid "+this.colorTrianguloLados;
+    trianguloBarraIzquierda.style.position = "absolute";
     trianguloBarraIzquierda.style.position = "absolute";
     //Poner a la izquierda y ponerlo encima de la barra
-    trianguloBarraIzquierda.style.left = parseInt(this.divBarra.style.left) - (this.anchoBarra/5) + "px";
-    trianguloBarraIzquierda.style.top = -this.anchoBarra/100 - this.altoBarra/2+ "px";
+    var test = window.innerWidth * (this.contenedora.anchoCajaJuego + (this.contenedora.anchoCajaJuego * this.anchoBarra)/100) /100;
+    trianguloBarraIzquierda.style.left = 80 + "%";
+    console.log(test)
+    trianguloBarraIzquierda.style.top = -10 + "px";
     trianguloBarraIzquierda.className = "trianguloBarraDerecha";
-    trianguloBarraIzquierda.style.zIndex = 1;
+    trianguloBarraIzquierda.style.zIndex = 2;
     padre = document.getElementById("contenedor");
     this.divBarra.appendChild(trianguloBarraIzquierda);
     return trianguloBarraIzquierda;
