@@ -950,7 +950,6 @@ function comprobarColisionElemento(pelota, elementoActual, tipo)
         else if(tipo == "barra" && !pelota.arribaY)
         {
             pelota.arribaY = true;
-            pelota.derechaX = true;
             pelota.pasoX = 4;
             pelota.derechaX = !pelota.derechaX;
         }
@@ -964,12 +963,13 @@ function comprobarColisionElemento(pelota, elementoActual, tipo)
         if(tipo == "ladrillo")
         {
             elementoActual.borrarLadrillo();
+            pelota.derechaX = true;
         }
         else if(tipo == "barra" && !pelota.arribaY)
         {
-            pelota.pasoX = 4;
-            pelota.derechaX = true;
             pelota.arribaY = true;
+            pelota.pasoX = 4;
+            pelota.derechaX = !pelota.derechaX;
         }
         break;
     }
