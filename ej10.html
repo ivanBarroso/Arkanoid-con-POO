@@ -139,7 +139,6 @@ Pelota.prototype.modificarPasoX = function (nuevoPaso)
     {
         this.pasoX = this.maximoPaso;
     }
-    console.log(this.pasoX)
 
 }
 // - - - - - F I N    D E    L A   C L A S E    P E L O T A  - - - - - - -
@@ -317,7 +316,6 @@ Barra.prototype.crearTrianguloDerecha  = function ()
     //Poner a la izquierda y ponerlo encima de la barra
     var test = window.innerWidth * (this.contenedora.anchoCajaJuego + (this.contenedora.anchoCajaJuego * this.anchoBarra)/100) /100;
     trianguloBarraIzquierda.style.left = 80 + "%";
-    console.log(test)
     trianguloBarraIzquierda.style.top = "0px";
     trianguloBarraIzquierda.className = "trianguloBarraDerecha";
     trianguloBarraIzquierda.style.zIndex = 2;
@@ -352,6 +350,7 @@ Barra.prototype.moverIzquierda = function()
         this.divBarra.style.left = barraFuturo + "px";
     }
 }
+
 //- - - - - -  - - - - - -   F I N    D E    C L A S E    B A R R A      - - - - - - - - 
 
 // - - - - - - - - - -     C L A S E     A R K A N O I D     - - - - - - - - - - - 
@@ -994,7 +993,7 @@ function comprobarColisionElemento(pelota, elementoActual, tipo)
     { 
         if(tipo == "ladrillo")
         {
-          pelota.derechaX = true;
+            pelota.derechaX = true;
             elementoActual.quitarVida();
             pelota.avanzarX();
             return;
