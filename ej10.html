@@ -305,17 +305,17 @@ Barra.prototype.crearTrianguloDerecha  = function ()
     var trianguloBarraIzquierda = document.createElement("div");
     trianguloBarraIzquierda.style.width = "0px";
     trianguloBarraIzquierda.style.height = "0px";
-    trianguloBarraIzquierda.style.borderRight= parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.anchoBarra/100)/10 +"px solid transparent";
-    trianguloBarraIzquierda.style.borderLeft=  parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.anchoBarra/100)/10 +"px solid transparent";
-    trianguloBarraIzquierda.style.borderTop=   parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.altoBarra/100) +"px solid transparent";
-    trianguloBarraIzquierda.style.borderBottom=parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.altoBarra/100) +"px solid "+this.colorTrianguloLados;
+    trianguloBarraIzquierda.style.borderRight= parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.anchoBarra/1000) +"px solid transparent";
+    trianguloBarraIzquierda.style.borderLeft=  parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/100 * this.anchoBarra/1000) +"px solid transparent";
+    trianguloBarraIzquierda.style.borderTop=   parseInt(window.innerWidth * this.contenedora.anchoCajaJuego/200 * this.altoBarra/100) +"px solid transparent";
+    trianguloBarraIzquierda.style.borderBottom=parseInt(window.innerHeight * this.contenedora.altoCajaJuego/200 * this.altoBarra/100) +"px solid "+this.colorTrianguloLados;
     trianguloBarraIzquierda.style.position = "absolute";
     trianguloBarraIzquierda.style.position = "absolute";
     //Poner a la izquierda y ponerlo encima de la barra
     var test = window.innerWidth * (this.contenedora.anchoCajaJuego + (this.contenedora.anchoCajaJuego * this.anchoBarra)/100) /100;
     trianguloBarraIzquierda.style.left = 80 + "%";
     console.log(test)
-    trianguloBarraIzquierda.style.top = "-1%";
+    trianguloBarraIzquierda.style.top = "0px";
     trianguloBarraIzquierda.className = "trianguloBarraDerecha";
     trianguloBarraIzquierda.style.zIndex = 2;
     padre = document.getElementById("contenedor");
