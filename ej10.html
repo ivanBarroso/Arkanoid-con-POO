@@ -275,7 +275,7 @@ Barra.prototype.crearTrianguloCentro  = function ()
     trianguloBarraCentro.style.top = "-10px";
     trianguloBarraCentro.className = "trianguloBarraCentro";
     trianguloBarraCentro.style.zIndex = 1;
-    padre = document.getElementById("contenedor");
+    padre = this.lineaBarra;
     this.divBarra.appendChild(trianguloBarraCentro);
     return trianguloBarraCentro;
 }
