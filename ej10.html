@@ -272,7 +272,7 @@ Barra.prototype.crearTrianguloCentro  = function ()
     trianguloBarraCentro.style.position = "absolute";
     //Centrarlo y ponerlo encima de la barra
     trianguloBarraCentro.style.left = "42%";
-    trianguloBarraCentro.style.top = "-10px";
+    trianguloBarraCentro.style.top = "-1%";
     trianguloBarraCentro.className = "trianguloBarraCentro";
     trianguloBarraCentro.style.zIndex = 1;
     padre = this.lineaBarra;
@@ -293,7 +293,7 @@ Barra.prototype.crearTrianguloIzquierda  = function ()
 
     //Poner a la izquierda y ponerlo encima de la barra
     trianguloBarraIzquierda.style.left = 0 + "px";
-    trianguloBarraIzquierda.style.top = "-10px";
+    trianguloBarraIzquierda.style.top = "-1%";
     trianguloBarraIzquierda.className = "trianguloBarraIzquierda";
     trianguloBarraIzquierda.style.zIndex = 2;
     padre = document.getElementById("contenedor");
@@ -315,7 +315,7 @@ Barra.prototype.crearTrianguloDerecha  = function ()
     var test = window.innerWidth * (this.contenedora.anchoCajaJuego + (this.contenedora.anchoCajaJuego * this.anchoBarra)/100) /100;
     trianguloBarraIzquierda.style.left = 80 + "%";
     console.log(test)
-    trianguloBarraIzquierda.style.top = -10 + "px";
+    trianguloBarraIzquierda.style.top = "-1%";
     trianguloBarraIzquierda.className = "trianguloBarraDerecha";
     trianguloBarraIzquierda.style.zIndex = 2;
     padre = document.getElementById("contenedor");
