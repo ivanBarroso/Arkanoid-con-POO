@@ -234,6 +234,7 @@ function Barra(anchoBarra, altoBarra, posicionX, posicionY, color, colorLinea, c
     this.crearTrianguloCentro = this.crearTrianguloCentro();
     this.divTrianguloIzquierda = this.crearTrianguloIzquierda();
     this.divTrianguloDerecha = this.crearTrianguloDerecha();
+    this.movimientoAcumulado = 0;
 }
 Barra.prototype.crearBarra  = function () 
 {
@@ -333,22 +334,49 @@ Barra.prototype.dispararCentro  = function ()
 }
 Barra.prototype.moverDerecha = function()
 {
-    var barraFuturo = parseInt(this.divBarra.style.left) + this.pasoBarra;
+    var barraFuturo;
+    if(this.movimientoAcumulado>4)
+    {
+        barraFuturo = parseInt(this.divBarra.style.left) + this.pasoBarra*2;
+    }
+    else
+    {
+        barraFuturo = parseInt(this.divBarra.style.left) + this.pasoBarra;
+    }
     var bordeDerechoContenedora = window.innerWidth * this.contenedora.anchoCajaJuego/100;
 
     if(barraFuturo < bordeDerechoContenedora - this.anchoBarraPx/2)
     {
-        this.divBarra.style.left = barraFuturo + "px";
+        this.movimientoAcumulado++;
+        setTimeout( this.desacumularMovimiento.bind(this) , 100);
+            this.divBarra.style.left = barraFuturo + "px";
     }
 }
 Barra.prototype.moverIzquierda = function()
 {
-    var barraFuturo = parseInt(this.divBarra.style.left) - this.pasoBarra;
+    var barraFuturo;
+    if(this.movimientoAcumulado>4)
+    {
+        barraFuturo = parseInt(this.divBarra.style.left) - this.pasoBarra*2;
+    }
+    else
+    {
+        barraFuturo = parseInt(this.divBarra.style.left) - this.pasoBarra;
+    }
     var bordeIzquierdoContenedora = 0;
     if(barraFuturo >= bordeIzquierdoContenedora - this.anchoBarraPx/2)
     {
+        this.movimientoAcumulado++;
+        setTimeout( this.desacumularMovimiento.bind(this) , 100);
         this.divBarra.style.left = barraFuturo + "px";
     }
+}
+/**
+*  Se acumula el movimiento con cada llamda a mover izquierda / derecha para mover la barra mas rapido si tiene mas de x acumulados
+*/
+Barra.prototype.desacumularMovimiento = function()
+{
+    this.acumularMovimiento--;
 }
 
 //- - - - - -  - - - - - -   F I N    D E    C L A S E    B A R R A      - - - - - - - - 
@@ -374,7 +402,7 @@ function Arkanoid(numeroJugadores, nivelActual, iniciado)
     {
         contenedora = new Contenedora(80, 100, 0, 0, "#d6d6d6");
         informacion = new Informacion(contenedora, null, 20, "#0b0b0b");
-        barraj1 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora, 40, 3);
+        barraj1 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora, 30, 3);
         new Pelota(5, 600, 1000, 1, 4, 5, 5, true, false, true, "green", contenedora, arrayPelotas1);
 
         
@@ -713,7 +741,6 @@ function comprobarColisionParedes(pelota) {
             pelota.derechaX = !pelota.derechaX;
         }
     }
-   
 }
 
 function comprobarColisionPelotas(pelota1, pelota2) 
