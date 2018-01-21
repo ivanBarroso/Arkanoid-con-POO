@@ -12,13 +12,13 @@
 
 window.onload = function () {
 
-    juego = new Arkanoid(1, 1, false);
+    juego = new Arkanoid(2, 0, false);
     document.onkeypress = comprobarTecla;
     juego.iniciarJuego();
- }
+}
 // - - - - - - - - - -     C L A S E     P E L O T A    - - - - - - - - - - - 
 
-function Pelota(anchoYalto, x, y, pasoX, pasoY, maximoPaso, intervalo, derechaX, arribaY, estaEnMovimiento, color, contenedora, arrayPelotas) {
+function Pelota(anchoYalto, x, y, pasoX, pasoY, maximoPaso, intervalo, derechaX, arribaY, estaEnMovimiento, color, contenedora, arrayPelotas, numJugador) {
     this.anchoYalto = anchoYalto;
     this.anchoYaltoPx = window.innerWidth * contenedora.anchoCajaJuego/100 * (anchoYalto/100);
     this.radio = this.anchoYaltoPx / 2;
@@ -34,6 +34,8 @@ function Pelota(anchoYalto, x, y, pasoX, pasoY, maximoPaso, intervalo, derechaX,
     this.color = color;
     this.contenedora = contenedora;
     this.arrayPelotas = arrayPelotas;
+    this.numJugador = numJugador;
+
     if(color != undefined)
     {
         this.color = color;
@@ -55,8 +57,9 @@ Pelota.prototype.crearPelota = function () {
     p.style.borderRadius = "50%";
     p.style.backgroundColor = this.color;
     p.style.position = "absolute";
-    p.style.top = this.y + "px";
-    p.style.left = this.x + "px";
+    p.style.left = window.innerWidth * (this.contenedora.anchoCajaJuego/100) /2 + "px";
+    p.style.top = window.innerHeight * (this.contenedora.altoCajaJuego/100)/2 - this.anchoYaltoPx*2 + "px";
+  
     p.className = "pelota";
     padre.appendChild(p);
     return p;
@@ -156,7 +159,6 @@ function Ladrillo(anchoLadrillo, altoLadrillo, posicionX, posicionY, vida, extra
     this.extra = 0;
     this.contenedora = contenedora;
     this.arrayLadrillos = arrayLadrillos;
-
     //Si tiene algun extra
     if(extra != undefined)
     {
@@ -186,15 +188,32 @@ Ladrillo.prototype.crearLadrillo  = function ()
     this.contenedora.divContenedora.appendChild(ladrillo);
     return ladrillo;
 }
-Ladrillo.prototype.quitarVida  = function () 
+Ladrillo.prototype.quitarVida  = function (numJugador) 
 {
     if(this.vida > 0)
     {
+        if(numJugador == 1)
+        {
+            juego.informacion.divPuntuacionJ1.innerHTML = parseInt(juego.informacion.divPuntuacionJ1.innerHTML) + 10;
+        }
+        else if(numJugador == 2)
+        {
+            juego.informacion.divPuntuacionJ2.innerHTML = parseInt(juego.informacion.divPuntuacionJ2.innerHTML) + 10;
+        }
         this.vida--;
         this.actualizarColor();
     }
     else
     {
+        if(numJugador == 1)
+        {
+            juego.informacion.divPuntuacionJ1.innerHTML = parseInt(juego.informacion.divPuntuacionJ1.innerHTML) + 20;
+        }
+        else if(numJugador == 2)
+        {
+            juego.informacion.divPuntuacionJ2.innerHTML = parseInt(juego.informacion.divPuntuacionJ2.innerHTML) + 20;
+
+        }
         this.borrarLadrillo();
     }
 }
@@ -234,6 +253,7 @@ function Barra(anchoBarra, altoBarra, posicionX, posicionY, color, colorLinea, c
     this.crearTrianguloCentro = this.crearTrianguloCentro();
     this.divTrianguloIzquierda = this.crearTrianguloIzquierda();
     this.divTrianguloDerecha = this.crearTrianguloDerecha();
+
     this.movimientoAcumulado = 0;
 }
 Barra.prototype.crearBarra  = function () 
@@ -390,7 +410,7 @@ function Arkanoid(numeroJugadores, nivelActual, iniciado)
     this.estaEnMovimiento = false;
     this.intervalo1 = "";
     this.intervalo2 = "";
-    
+    this.nivelActual = nivelActual;
 
     arrayPelotas1 = new Array();
     arrayLadrillos1 = new Array();  
@@ -401,9 +421,9 @@ function Arkanoid(numeroJugadores, nivelActual, iniciado)
     if(numeroJugadores == 1)
     {
         contenedora = new Contenedora(80, 100, 0, 0, "#d6d6d6");
-        informacion = new Informacion(contenedora, null, 20, "#0b0b0b");
+        this.informacion = new Informacion(contenedora, null, 20, "#0b0b0b", this.nivelActual);
         barraj1 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora, 30, 3);
-        new Pelota(5, 600, 1000, 1, 4, 5, 5, true, false, true, "green", contenedora, arrayPelotas1);
+        new Pelota(5, 600, 1000, 1, 4, 5, 5, true, false, true, "green", contenedora, arrayPelotas1, 1);
 
         
     }
@@ -413,12 +433,12 @@ function Arkanoid(numeroJugadores, nivelActual, iniciado)
         // J1
         contenedora = new Contenedora(40, 100, 0, 0, "#d6d6d6");
         barraj1 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora, 40);
-        new Pelota(5, parseInt(barraj1.divBarra.style.left)*1.2, parseInt(barraj1.divBarra.style.top)*0.96, 1, 4, 5, 5, false, true, true, "green", contenedora, arrayPelotas1);
-        informacion = new Informacion(contenedora, contenedora, 20, "#0b0b0b");
+        new Pelota(5, parseInt(barraj1.divBarra.style.left)*1.2, parseInt(barraj1.divBarra.style.top)*0.96, 1, 4, 5, 5, false, true, true, "green", contenedora, arrayPelotas1, 1);
+        this.informacion = new Informacion(contenedora, contenedora, 20, "#0b0b0b", this.nivelActual);
         // J2
-        contenedora1 = new Contenedora(40, 100, window.innerWidth* (contenedora.anchoCajaJuego/100 + informacion.anchoInformacion/100), 0, "#d6d6ff");
-        barraj2 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora1, 40, 3);
-        new Pelota(5, parseInt(barraj2.divBarra.style.left)*1.2, parseInt(barraj2.divBarra.style.top)*0.96, 1, 4, 5, 5, true, true, true, "red", contenedora1, arrayPelotas2);
+        contenedora1 = new Contenedora(40, 100, window.innerWidth* (contenedora.anchoCajaJuego/100 + this.informacion.anchoInformacion/100), 0, "#d6d6ff");
+        barraj2 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora1, 40, 3, 2);
+        new Pelota(5, parseInt(barraj2.divBarra.style.left)*1.2, parseInt(barraj2.divBarra.style.top)*0.96, 1, 4, 5, 5, true, true, true, "red", contenedora1, arrayPelotas2, 2);
         if(this.iniciado)
         {
             this.comenzarJuegoJ1();
@@ -544,13 +564,14 @@ Contenedora.prototype.crearContenedora  = function ()
 
 
 // - - - - - - - - - -     C L A S E      I N F O R M A C I O N     - - - - - - - - - - - 
-function Informacion(contenedor1, contenedor2, anchoInformacion, colorFondo)
+function Informacion(contenedor1, contenedor2, anchoInformacion, colorFondo, nivelActual)
 {
     this.contenedor1 = contenedor1;
     this.contenedor2 = contenedor2;
     this.altoInformacion = contenedor1.altoCajaJuego;
     this.anchoInformacion = anchoInformacion;
     this.colorFondo = colorFondo;
+    this.nivelActual = nivelActual;
     this.divInformacion = this.crearInformacion();
 
     this.divJugador1 = this.crearInfoJugador1();
@@ -562,7 +583,7 @@ function Informacion(contenedor1, contenedor2, anchoInformacion, colorFondo)
     this.divPuntuacionJ1 = this.crearInfoJugador1Texto();
     this.textoACrear = "Round";
     this.crearInfoJugador1Texto();
-    this.textoACrear = "I";
+    this.textoACrear = this.nivelActual;
     this.divNivelJ1 = this.crearInfoJugador1Texto();
 
     if(contenedor2 != undefined)
@@ -577,7 +598,7 @@ function Informacion(contenedor1, contenedor2, anchoInformacion, colorFondo)
         this.divPuntuacionJ2 = this.crearInfoJugador2Texto();
         this.textoACrear = "Round";
         this.crearInfoJugador2Texto();
-        this.textoACrear = "I";
+        this.textoACrear = this.nivelActual;
         this.divNivelJ2 = this.crearInfoJugador2Texto();
     }
 }
@@ -652,6 +673,7 @@ Informacion.prototype.crearInfoJugador2  = function ()
     padre.appendChild(inf);
     return inf;
 }
+
 //- - - - - -  - - - - - -   F I N    D E    C L A S E    I N F O R M A C I O N      - - - - - - - - 
 
 // M E T O D O S    Q U E    U S A N    V A R I O S    O B J E T O S
@@ -934,7 +956,7 @@ function comprobarColisionElemento(pelota, elementoActual, tipo)
         if(tipo == "ladrillo")
         {
             pelota.arribaY = false;
-            elementoActual.quitarVida();
+            elementoActual.quitarVida(pelota.numJugador);
             pelota.avanzarY();
             //Corregir posicion
             //pelotaY = yAbajo + "px";
@@ -949,7 +971,7 @@ function comprobarColisionElemento(pelota, elementoActual, tipo)
     { 
         if(tipo == "ladrillo")
         {
-            elementoActual.quitarVida();
+            elementoActual.quitarVida(pelota.numJugador);
                         pelota.avanzarY();
                         pelota.arribaY = true;
 
@@ -1002,7 +1024,7 @@ function comprobarColisionElemento(pelota, elementoActual, tipo)
         if(tipo == "ladrillo")
         {
             pelota.derechaX = false;
-            elementoActual.quitarVida();
+            elementoActual.quitarVida(pelota.numJugador);
             pelota.avanzarX();
             return;
         }
@@ -1021,7 +1043,7 @@ function comprobarColisionElemento(pelota, elementoActual, tipo)
         if(tipo == "ladrillo")
         {
             pelota.derechaX = true;
-            elementoActual.quitarVida();
+            elementoActual.quitarVida(pelota.numJugador);
             pelota.avanzarX();
             return;
         }
