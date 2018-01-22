@@ -12,7 +12,7 @@
 
 window.onload = function () {
 
-    juego = new Arkanoid(2, 0, false);
+    juego = new Arkanoid(2, 1, false, 2);
     document.onkeypress = comprobarTecla;
     juego.iniciarJuego();
 }
@@ -44,7 +44,8 @@ function Pelota(anchoYalto, x, y, pasoX, pasoY, maximoPaso, intervalo, derechaX,
     {
         this.color = "#ff0000";
     }
-    this.divPelota = this.crearPelota();
+    //this.divPelota = this.crearPelota();
+    this.crearPelota();
     this.comprobarPosicion();
     this.arrayPelotas.push(this);
 }
@@ -62,7 +63,7 @@ Pelota.prototype.crearPelota = function () {
   
     p.className = "pelota";
     padre.appendChild(p);
-    return p;
+    this.divPelota = p;
 };
 Pelota.prototype.avanzarX = function () 
 {
@@ -402,7 +403,7 @@ Barra.prototype.desacumularMovimiento = function()
 //- - - - - -  - - - - - -   F I N    D E    C L A S E    B A R R A      - - - - - - - - 
 
 // - - - - - - - - - -     C L A S E     A R K A N O I D     - - - - - - - - - - - 
-function Arkanoid(numeroJugadores, nivelActual, iniciado)
+function Arkanoid(numeroJugadores, nivelActual, iniciado, numVidas)
 {
     this.numeroJugadores = numeroJugadores;
     this.nivelActual = nivelActual;
@@ -411,7 +412,7 @@ function Arkanoid(numeroJugadores, nivelActual, iniciado)
     this.intervalo1 = "";
     this.intervalo2 = "";
     this.nivelActual = nivelActual;
-
+    this.numVidas = numVidas;
     arrayPelotas1 = new Array();
     arrayLadrillos1 = new Array();  
     arrayPelotas2 = new Array();
@@ -420,16 +421,18 @@ function Arkanoid(numeroJugadores, nivelActual, iniciado)
     barraj2 = ""; 
     if(numeroJugadores == 1)
     {
+        this.vidasJ1 = this.numVidas;
         contenedora = new Contenedora(80, 100, 0, 0, "#d6d6d6");
         this.informacion = new Informacion(contenedora, null, 20, "#0b0b0b", this.nivelActual);
         barraj1 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora, 30, 3);
-        new Pelota(5, 600, 1000, 1, 4, 5, 5, true, false, true, "green", contenedora, arrayPelotas1, 1);
+        new Pelota(5, 600, 500, 1, 4, 5, 5, true, false, true, "green", contenedora, arrayPelotas1, 1);
 
         
     }
     else if(numeroJugadores == 2)
     {
-
+        this.vidasJ1 = this.numVidas;
+        this.vidasJ2 = this.numVidas;
         // J1
         contenedora = new Contenedora(40, 100, 0, 0, "#d6d6d6");
         barraj1 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora, 40);
@@ -690,7 +693,6 @@ function mover(arrayPelotas, barra, arrayLadrillos) {
         {
             if(arrayPelotas[0] != undefined)
             {
-
                 comprobarColisionParedes(arrayPelotas[0]);
                 comprobarColisionElemento(arrayPelotas[0], barra, "barra");
                 
@@ -698,7 +700,6 @@ function mover(arrayPelotas, barra, arrayLadrillos) {
                 {  
                     comprobarColisionElemento(arrayPelotas[0], arrayLadrillos[i], "ladrillo");
                 }
-
                 if(arrayPelotas[0].estaEnMovimiento)
                 {
                     arrayPelotas[0].avanzarY();
@@ -752,7 +753,38 @@ function comprobarColisionParedes(pelota) {
         }
         //Choca abajo
         else if (pelota.pasoY + pelota.y + pelota.pasoX > (window.innerHeight * (pelota.contenedora.altoCajaJuego/100) - pelota.anchoYaltoPx) && !pelota.arribaY) {
-        pelota.arribaY = true;
+        
+        if(pelota.numJugador == 1)
+        {
+            juego.numVidas--;
+            //arrayPelotas1.splice(arrayPelotas1.indexOf(this),1);
+            borrarElemento(pelota.divPelota);
+            if(juego.vidasJ1 > 0)
+            {
+                pelota.crearPelota();
+                juego.comenzarJuegoJ1();
+            }
+            else
+            {
+                console.log("Fin del juego")
+            }
+        }
+        else if(pelota.numJugador == 2)
+        {
+            //arrayPelotas2.splice(arrayPelotas2.indexOf(this),1);
+            borrarElemento(pelota.divPelota);
+            if(juego.vidasJ2 > 0)
+            {
+                pelota.crearPelota();
+                juego.comenzarJuegoJ2();
+            }
+            else
+            {
+                console.log("Fin del juego")
+            }
+        }
+        //pelota.arribaY = true;
+        
         }
         //Choca derecha
         if (pelota.pasoX + pelota.pasoY + pelota.x >= (window.innerWidth* (contenedora.anchoCajaJuego/100) - pelota.anchoYaltoPx) && pelota.derechaX) {
@@ -961,7 +993,6 @@ function comprobarColisionElemento(pelota, elementoActual, tipo)
             //Corregir posicion
             //pelotaY = yAbajo + "px";
             return;
-
         }
     }
     //Si va a colisiona en la parte superior
