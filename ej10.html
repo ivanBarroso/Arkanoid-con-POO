@@ -425,7 +425,9 @@ function Arkanoid(numeroJugadores, nivelActual, iniciado, numVidas)
         contenedora = new Contenedora(80, 100, 0, 0, "#d6d6d6");
         this.informacion = new Informacion(contenedora, null, 20, "#0b0b0b", this.nivelActual);
         barraj1 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora, 30, 3);
-        new Pelota(5, 600, 500, 1, 4, 5, 5, true, false, true, "green", contenedora, arrayPelotas1, 1);
+        new Pelota(2, 600, 500, 1, 4, 5, 5, true, false, true, "green", contenedora, arrayPelotas1, 1);
+        new Pelota(2, 300, 500, 1, 4, 5, 5, true, false, true, "red", contenedora, arrayPelotas1, 1);
+
 
         
     }
@@ -436,12 +438,12 @@ function Arkanoid(numeroJugadores, nivelActual, iniciado, numVidas)
         // J1
         contenedora = new Contenedora(40, 100, 0, 0, "#d6d6d6");
         barraj1 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora, 40);
-        new Pelota(5, parseInt(barraj1.divBarra.style.left)*1.2, parseInt(barraj1.divBarra.style.top)*0.96, 1, 4, 5, 5, false, true, true, "green", contenedora, arrayPelotas1, 1);
+        new Pelota(2, parseInt(barraj1.divBarra.style.left)*1.2, parseInt(barraj1.divBarra.style.top)*0.96, 1, 4, 5, 5, false, true, true, "green", contenedora, arrayPelotas1, 1);
         this.informacion = new Informacion(contenedora, contenedora, 20, "#0b0b0b", this.nivelActual);
         // J2
         contenedora1 = new Contenedora(40, 100, window.innerWidth* (contenedora.anchoCajaJuego/100 + this.informacion.anchoInformacion/100), 0, "#d6d6ff");
         barraj2 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora1, 40, 3, 2);
-        new Pelota(5, parseInt(barraj2.divBarra.style.left)*1.2, parseInt(barraj2.divBarra.style.top)*0.96, 1, 4, 5, 5, true, true, true, "red", contenedora1, arrayPelotas2, 2);
+        new Pelota(2, parseInt(barraj2.divBarra.style.left)*1.2, parseInt(barraj2.divBarra.style.top)*0.96, 1, 4, 5, 5, true, true, true, "red", contenedora1, arrayPelotas2, 2);
         if(this.iniciado)
         {
             this.comenzarJuegoJ1();
@@ -524,6 +526,16 @@ Arkanoid.prototype.iniciarJuego  = function ()
 Arkanoid.prototype.pausar  = function () 
 {
     clearInterval(this.intervalo1);
+    clearInterval(this.intervalo2);
+    this.estaEnMovimiento = false;
+}
+Arkanoid.prototype.terminarJ1  = function () 
+{
+    clearInterval(this.intervalo1);
+    this.estaEnMovimiento = false;
+}
+Arkanoid.prototype.terminarJ2  = function () 
+{
     clearInterval(this.intervalo2);
     this.estaEnMovimiento = false;
 }
@@ -712,9 +724,8 @@ function mover(arrayPelotas, barra, arrayLadrillos) {
         {
             //Pasamos por todas las pelotas
             for (var i = 0; i < arrayPelotas.length; i++) 
-            {        
-                //comprobarColisionParedes(arrayPelotas[i]);
-
+            {      
+                //comprobarColisionParedes(arrayPelotas[i])
                 for(var j = 0; j < arrayPelotas.length; j++)
                 {
                     //EVITA QUE SE COMPRUEBE UNA PELOTA CON LA MISMA DEL ARRAY
@@ -729,11 +740,12 @@ function mover(arrayPelotas, barra, arrayLadrillos) {
                         }
                     }
                 }
-                if(arrayPelotas[i].estaEnMovimiento)
+                console.log(arrayPelotas[i].color)
+               /* if(arrayPelotas[i].estaEnMovimiento)
                 {
                     arrayPelotas[i].avanzarY();
                     arrayPelotas[i].avanzarX();
-                }
+                }*/
             }
         }   
     
@@ -756,13 +768,12 @@ function comprobarColisionParedes(pelota) {
         
         if(pelota.numJugador == 1)
         {
-            juego.numVidas--;
+            juego.vidasJ1--;
             //arrayPelotas1.splice(arrayPelotas1.indexOf(this),1);
-            borrarElemento(pelota.divPelota);
+            //borrarElemento(pelota.divPelota);
             if(juego.vidasJ1 > 0)
             {
-                pelota.crearPelota();
-                juego.comenzarJuegoJ1();
+                pelota.arribaY = true;
             }
             else
             {
@@ -775,8 +786,7 @@ function comprobarColisionParedes(pelota) {
             borrarElemento(pelota.divPelota);
             if(juego.vidasJ2 > 0)
             {
-                pelota.crearPelota();
-                juego.comenzarJuegoJ2();
+                pelota.arribaY = true;
             }
             else
             {
@@ -787,12 +797,12 @@ function comprobarColisionParedes(pelota) {
         
         }
         //Choca derecha
-        if (pelota.pasoX + pelota.pasoY + pelota.x >= (window.innerWidth* (contenedora.anchoCajaJuego/100) - pelota.anchoYaltoPx) && pelota.derechaX) {
-            pelota.derechaX = !pelota.derechaX;
+        if (parseInt(pelota.pasoX + pelota.pasoY + pelota.x) >= parseInt((window.innerWidth* (contenedora.anchoCajaJuego/100) - pelota.anchoYaltoPx) && pelota.derechaX)) {
+            pelota.derechaX = false;
         }
         //Choca izquierda
-        else if (pelota.x - pelota.pasoY- pelota.pasoX <= 0 && !pelota.derechaX) {
-            pelota.derechaX = !pelota.derechaX;
+        else if (parseInt(pelota.x - pelota.pasoY- pelota.pasoX) <= 0 && !pelota.derechaX) {
+            pelota.derechaX = true;
         }
     }
 }
