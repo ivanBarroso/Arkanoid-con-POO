@@ -702,6 +702,7 @@
     {
         if(arrayLadrillos2.length == 0)
         {
+            alert("pasa de nivel j2")
             juego.nivelJ2++;
             juego.pintarNivelJ2(juego.nivelJ1);
         }
@@ -1099,7 +1100,27 @@
 </script>
 
 <body>
-
+    <div class="centrar">
+        <h1>Como jugar (1 jugador)</h1>
+        <h1>(Presiona H para mostrar/ocultar ayuda)</h1>
+        <div class="teclas">
+            <img class="tecla" src="keyboard_key_right.png" alt="tecla_izquierda">
+            <img class="tecla" src="keyboard_key_left.png" alt="tecla_derecha">
+        </div>
+        <div id="infoTeclas"><br><span>Usa las flechas para moverte</span></div>
+        <div class="teclas">
+            <img id="teclaEspacio" src="mouse.jpg" alt="tecla_izquierda">
+        </div>
+        <div id="infoTeclas"><span>Pulsa la barra espacio para iniciar</span></div>
+        <div class="teclas">
+            <img class="tecla" src="keyboard_key_p.png" alt="tecla_p">
+        </div>
+        <div id="infoTeclas"><span>Tecla P para pausar el juego</span></div>
+        <div class="teclas">
+            <img class="tecla" src="mouse.png" alt="raton">
+        </div>
+        <div id="infoTeclas"><span>Puedes mover con el ratón la barra</span></div>
+    </div>
 </body>
 
 </html>
