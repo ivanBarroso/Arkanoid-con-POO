@@ -13,16 +13,6 @@
 
     window.onload = function () {
 
-        //juego = new Arkanoid(2, 0, false, 30000000000);
-        //document.onkeypress = comprobarTecla;
-        //document.onmousemove = comprobarRaton;
-
-        //juego.iniciarJuego();
-        /*setInterval(comprobarPasoNivelJ1, 100);
-        if(juego.numeroJugadores == 2)
-        {
-            setInterval(comprobarPasoNivelJ2, 100);
-        }*/
     }
     // - - - - - - - - - -     C L A S E     P E L O T A    - - - - - - - - - - - 
 
@@ -229,7 +219,7 @@
         this.contenedora = contenedora;
         this.pasoBarra = pasoBarra;
         this.numDisparos = numDisparos;
-        this.arrayDisparos = new Array(this.numDisparos);
+        this.arrayDisparos = new Array();
         this.anchoBarraPx = (window.innerWidth * this.contenedora.anchoCajaJuego / 100 * this.anchoBarra / 100);
         this.altoBarraPx = (window.innerHeight * this.contenedora.altoCajaJuego / 100 * this.altoBarra / 100);
         this.divBarra = this.crearBarra();
@@ -291,8 +281,6 @@
         trianguloBarraIzquierda.style.borderTop = parseInt(window.innerWidth * this.contenedora.anchoCajaJuego / 130 * this.altoBarra / 100) + "px solid transparent";
         trianguloBarraIzquierda.style.borderBottom = parseInt(window.innerHeight * this.contenedora.altoCajaJuego / 130 * this.altoBarra / 100) + "px solid " + this.colorTrianguloLados;
         trianguloBarraIzquierda.style.position = "absolute";
-
-
         //Poner a la izquierda y ponerlo encima de la barra
         trianguloBarraIzquierda.style.left = 0 + "px";
         trianguloBarraIzquierda.style.top = "-1%";
@@ -321,12 +309,6 @@
         padre = document.getElementById("contenedor");
         this.divBarra.appendChild(trianguloBarraIzquierda);
         return trianguloBarraIzquierda;
-    }
-    Barra.prototype.dispararCentro = function () {
-        if (this.arrayDisparos.length < 3) {
-            alert("disparando");
-            //TODO
-        }
     }
     Barra.prototype.moverDerecha = function () {
         var barraFuturo;
@@ -365,6 +347,29 @@
     Barra.prototype.desacumularMovimiento = function () {
         this.acumularMovimiento--;
     }
+    Barra.prototype.pintarDisparo = function () {
+        var disparo = document.createElement("div");
+        disparo.style.width = "1%";
+        disparo.style.height = "2%";
+        disparo.style.position = "absolute";
+        //Centrarlo y ponerlo encima de la barra
+        disparo.style.left = parseInt(this.divBarra.style.left) + this.anchoBarraPx/2 + "px";
+        disparo.style.top = parseInt(this.divBarra.style.top) - this.altoBarraPx + "px";
+        disparo.className = "disparo";
+        disparo.style.backgroundColor = "green"
+        disparo.style.zIndex = 12;
+        this.contenedora.divContenedora.appendChild(disparo);
+        
+        this.intervalo1 = setInterval(function () {
+            moverDisparo(disparo); 
+        }, 10);
+
+        this.arrayDisparos.push(disparo);
+    }
+    Barra.prototype.dispararCentro = function () {
+            moverDisparo(this.arrayDisparos[0]);
+    }
+
 
     //- - - - - -  - - - - - -   F I N    D E    C L A S E    B A R R A      - - - - - - - - 
 
@@ -396,6 +401,7 @@
             this.informacion = new Informacion(contenedora, null, 20, "#0b0b0b", this.nivelActual, this.numVidas, this.nombreJ1, this.nombreJ2);
             barraj1 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora, 30, 3);
             new Pelota(2, 0, 0, 1, 4, 5, 5, true, false, false, "green", contenedora, arrayPelotas1, 1, barraj1);
+            
             this.pintarNivelJ1(this.nivelJ1);
             if (this.iniciado) {
                 this.comenzarJuegoJ1();
@@ -909,6 +915,10 @@
         }
         //Al pulsar la letra p o P
         switch (String.fromCharCode(evento.charCode)) {
+            case "s":
+            case "S":
+                juego.barraj1.pintarDisparo();
+            break;
             case "p":
             case "P":
                 if (!juego.estaEnMovimiento && juego.iniciado) {
@@ -1107,9 +1117,12 @@
             else if (coordenadaX - barraj1.anchoBarraPx / 2 < (parseInt(barraj1.divBarra.style.left) - barraj1.pasoBarra)) {
                 barraj1.divBarra.style.left = coordenadaX - barraj1.anchoBarraPx / 2 + "px"
             }
-
-
         }
+    }
+
+    function moverDisparo(disparo)
+    {
+        disparo.style.top = parseInt(disparo.style.top) - 2 + "px";
     }
     // P A R A   T E S T E A R
     function pintarColision(x, y, color, contenedora) {
