@@ -49,58 +49,69 @@
       padding-bottom: 10px;
     }
 
-    .teclas {
+    .textos {
       width: 39%;
       height: 10%;
       float: left;
       margin: 5%;
     }
 
-    #infoTeclas {
+    .valoresTexto {
       text-align: left;
       height: 10%;
       width: 40%;
       float: right;
       margin: 5%;
     }
-    #infoTeclas span{
-      text-align: left;
-      padding-top: 50%;
-      height: 100%;
-      color: #fff;
-      font-weight: 800;
-    }
-    #teclaEspacio {
+    #botonComenzar{
       width: 100%;
-      float: left;
+      height: 15%;
+      font-size: 20px;
     }
-
   </style>
 
 </head>
 
 <body>
   <div class="centrar">
-    <h1>Como jugar (1 jugador)</h1>
-    <h1>(Presiona H para mostrar/ocultar ayuda)</h1>
-    <div class="teclas">
-      <img class="tecla" src="keyboard_key_right.png" alt="tecla_izquierda">
-      <img class="tecla" src="keyboard_key_left.png" alt="tecla_derecha">
+    <h1>Arkanoid</h1>
+    <div class="textos">
+      <h1>Numero de jugadores</h1>
     </div>
-    <div id="infoTeclas"><br><span>Usa las flechas para moverte</span></div>
-    <div class="teclas">
-      <img id="teclaEspacio" src="mouse.jpg" alt="tecla_izquierda">
+    <div class="valoresTexto"><br>
+      <select name="numJugadores" id="numJugadores">
+        <option value="uno">1</option>
+        <option value="dos">2</option>
+      </select>
     </div>
-    <div id="infoTeclas"><span>Pulsa la barra espacio para iniciar</span></div>
-    <div class="teclas">
-      <img class="tecla" src="keyboard_key_p.png" alt="tecla_p">
+    <br>
+    <div class="textos">
+      <h1>Nivel inicial</h1>
     </div>
-    <div id="infoTeclas"><span>Tecla P para pausar el juego</span></div>
-    <div class="teclas">
-      <img class="tecla" src="mouse.png" alt="raton">
+    <div class="valoresTexto"><br>
+      <select name="nivel" id="nivel">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+      </select>
     </div>
-    <div id="infoTeclas"><span>Puedes mover con el ratón la barra</span></div>
+    <div class="textos">
+      <h1>Nombre j1</h1>
+    </div>
+    <div class="valoresTexto"><br> <input id="nombrej1" type="text"></input>
+    </div>
+    <div class="textos">
+      <h1>Nombre j2</h1>
+    </div>
+    <div class="valoresTexto"><br> <input id="nombrej2" type="text"></input>
   </div>
+      <button id="botonComenzar" onclick="comenzar">   Comenzar Juego   </button>
+    <br>
+    
 
 
 </body>
