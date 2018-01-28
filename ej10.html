@@ -353,21 +353,21 @@
         disparo.style.height = "2%";
         disparo.style.position = "absolute";
         //Centrarlo y ponerlo encima de la barra
-        disparo.style.left = parseInt(this.divBarra.style.left) + this.anchoBarraPx/2 + "px";
+        disparo.style.left = parseInt(this.divBarra.style.left) + this.anchoBarraPx / 2 + "px";
         disparo.style.top = parseInt(this.divBarra.style.top) - this.altoBarraPx + "px";
         disparo.className = "disparo";
         disparo.style.backgroundColor = "green"
         disparo.style.zIndex = 12;
         this.contenedora.divContenedora.appendChild(disparo);
-        
+
         this.intervalo1 = setInterval(function () {
-            moverDisparo(disparo); 
+            moverDisparo(disparo);
         }, 10);
 
         this.arrayDisparos.push(disparo);
     }
     Barra.prototype.dispararCentro = function () {
-            moverDisparo(this.arrayDisparos[0]);
+        moverDisparo(this.arrayDisparos[0]);
     }
 
 
@@ -401,7 +401,7 @@
             this.informacion = new Informacion(contenedora, null, 20, "#0b0b0b", this.nivelActual, this.numVidas, this.nombreJ1, this.nombreJ2);
             barraj1 = new Barra(20, 3, 0, 0, "#654321", "#ff0000", "#0000ff", "#00ff00", contenedora, 30, 3);
             new Pelota(2, 0, 0, 1, 4, 5, 5, true, false, false, "green", contenedora, arrayPelotas1, 1, barraj1);
-            
+
             this.pintarNivelJ1(this.nivelJ1);
             if (this.iniciado) {
                 this.comenzarJuegoJ1();
@@ -533,6 +533,8 @@
         con.style.width = this.anchoCajaJuego + "%";
         con.style.height = this.altoCajaJuego + "%";
         con.style.backgroundColor = this.colorFondo;
+        con.style.backgroundImage = "url('fondo.jpg')";
+
         con.className = "contenedora";
         con.style.cssFloat = "left";
         padre.appendChild(con);
@@ -556,11 +558,11 @@
         this.divJugador1 = this.crearInfoJugador1();
         this.textoACrear = this.nombreJ1;
         this.crearInfoJugador1Texto();
-        this.textoACrear = "Score";
+        this.textoACrear = "Puntuación";
         this.crearInfoJugador1Texto();
         this.textoACrear = "00000";
         this.divPuntuacionJ1 = this.crearInfoJugador1Texto();
-        this.textoACrear = "Round";
+        this.textoACrear = "Nivel";
         this.crearInfoJugador1Texto();
         this.textoACrear = this.nivelActual + 1;
         this.divNivelJ1 = this.crearInfoJugador1Texto();
@@ -574,11 +576,11 @@
             this.divJugador2 = this.crearInfoJugador2();
             this.textoACrear = this.nombreJ2;
             this.crearInfoJugador2Texto();
-            this.textoACrear = "Score";
+            this.textoACrear = "Puntuación";
             this.crearInfoJugador2Texto();
             this.textoACrear = "00000";
             this.divPuntuacionJ2 = this.crearInfoJugador2Texto();
-            this.textoACrear = "Round";
+            this.textoACrear = "Nivel";
             this.crearInfoJugador2Texto();
             this.textoACrear = this.nivelActual + 1;
             this.divNivelJ2 = this.crearInfoJugador2Texto();
@@ -597,6 +599,7 @@
         inf.style.width = this.anchoInformacion + "%";
         inf.style.height = this.altoInformacion + "%";
         inf.style.backgroundColor = this.colorFondo;
+        inf.style.backgroundImage = "url('fondo_info.jpg')";
         inf.className = "informacion";
         inf.style.zIndex = 2;
         inf.style.cssFloat = "left";
@@ -609,8 +612,8 @@
         inf.style.position = "absolute";
         inf.style.width = 96 + "%";
         inf.style.height = 46 + "%";
-        inf.style.margin = "2%";
-        inf.style.backgroundColor = this.colorFondo;
+        inf.style.margin = "10%";
+        //inf.style.backgroundColor = this.colorFondo;
         inf.className = "informacion";
         padre.appendChild(inf);
         return inf;
@@ -621,7 +624,7 @@
         inf.style.position = "relative";
         inf.style.width = 100 + "%";
         inf.style.height = 15 + "%";
-        inf.style.backgroundColor = this.colorFondo;
+        //inf.style.backgroundColor = this.colorFondo;
         inf.className = "informacion";
         var texto = document.createTextNode(this.textoACrear);
         inf.appendChild(texto);
@@ -634,7 +637,7 @@
         inf.style.position = "relative";
         inf.style.width = 100 + "%";
         inf.style.height = 15 + "%";
-        inf.style.backgroundColor = this.colorFondo;
+        //inf.style.backgroundColor = this.colorFondo;
         inf.className = "informacion";
         var texto = document.createTextNode(this.textoACrear);
         inf.appendChild(texto);
@@ -648,8 +651,8 @@
         inf.style.top = 50 + "%";
         inf.style.width = 96 + "%";
         inf.style.height = 46 + "%";
-        inf.style.margin = "2%";
-        inf.style.backgroundColor = this.colorFondo;
+        inf.style.margin = "10%";
+        //inf.style.backgroundColor = this.colorFondo;
         inf.className = "informacion";
         padre.appendChild(inf);
         return inf;
@@ -737,10 +740,10 @@
                         //Borramos la pelota 
                         var index = pelota.arrayPelotas.indexOf(pelota);
                         borrarElemento(pelota.divPelota);
-                        cambiarFondoJuego("#ff0000", pelota.contenedora.divContenedora);
+                        cambiarFondoJuego("#ff0000", pelota.contenedora.divContenedora, "url('')");
 
                         setTimeout(function () {
-                            cambiarFondoJuego("#000000", pelota.contenedora.divContenedora)
+                            cambiarFondoJuego("#000000", pelota.contenedora.divContenedora, "url('fondo.jpg')")
                         }
                             , 200
                         )
@@ -749,9 +752,9 @@
                     //Si solo queda una pelota en juego
                     else if (pelota.arrayPelotas.length == 1) {
                         //Rebotamos, quitamos una vida y continua el juego
-                        cambiarFondoJuego("#ff0000", pelota.contenedora.divContenedora);
+                        cambiarFondoJuego("#ff0000", pelota.contenedora.divContenedora, "url('')");
                         setTimeout(function () {
-                            cambiarFondoJuego("#000000", pelota.contenedora.divContenedora)
+                            cambiarFondoJuego("#000000", pelota.contenedora.divContenedora, "url('fondo.jpg')")
                         }
                             , 200
                         )
@@ -765,7 +768,22 @@
                             var index = pelota.arrayPelotas.indexOf(pelota);
                             borrarElemento(pelota.divPelota);
                             pelota.arrayPelotas.splice(index, 1);
-                            alert("fin del juego J1")
+                            alert("Fin del juego "+juego.nombreJ1)
+                            if(juego.numeroJugadores == 1)
+                            {
+                                
+                                puntuacion = getCookie("record");
+                                puntuacionJ1 = parseInt(juego.informacion.divPuntuacionJ1.innerHTML);
+                                if(puntuacion < puntuacionJ1)
+                                {
+                                    setCookie("record", puntuacionJ1, 1000);
+                                    alert("Nuevo record almacenado "+juego.nombreJ1 + " : " + puntuacionJ1);
+                                }
+                                else
+                                {
+                                    alert("Lo siento, el record esta en "+puntuacion);
+                                }
+                            }
                         }
                     }
                 }
@@ -781,9 +799,9 @@
                         //Si solo queda una pelota en juego
                         else if (pelota.arrayPelotas.length == 1) {
                             //Rebotamos, quitamos una vida y continua el juego
-                            cambiarFondoJuego("#ff0000", pelota.contenedora.divContenedora);
+                            cambiarFondoJuego("#ff0000", pelota.contenedora.divContenedora, "url('')");
                             setTimeout(function () {
-                                cambiarFondoJuego("#000000", pelota.contenedora.divContenedora)
+                                cambiarFondoJuego("#000000", pelota.contenedora.divContenedora, "url('fondo.jpg')")
                             }
                                 , 200
                             )
@@ -801,7 +819,7 @@
                                     , 200
                                 )
                                 pelota.arrayPelotas.splice(index, 1);
-                                alert("fin del juego J2")
+                                alert("fin del juego "+juego.nombreJ2)
                             }
                         }
                     }
@@ -918,7 +936,7 @@
             case "s":
             case "S":
                 juego.barraj1.pintarDisparo();
-            break;
+                break;
             case "p":
             case "P":
                 if (!juego.estaEnMovimiento && juego.iniciado) {
@@ -948,7 +966,10 @@
             case "h":
             case "H":
                 if (juego.ayudaMostrada) {
-                    juego.iniciarJuego();
+                    if(juego.numeroJugadores == 2)
+                    {                    
+                        juego.iniciarJuego();
+                    }
                     //Ocultar la ayuda
                     document.getElementById("ayudaJ2").style.visibility = "hidden";
                     document.getElementById("ayudaJ1").style.visibility = "hidden";
@@ -1099,8 +1120,10 @@
         }
     }
     //Para cambiar el fondo del fondo del juego
-    function cambiarFondoJuego(color, contenedora) {
+    function cambiarFondoJuego(color, contenedora, fondo) {
         contenedora.style.backgroundColor = color;
+        contenedora.style.backgroundImage = fondo;
+
     }
     //Esta funcion se usa solo si hay un jugador
     function comprobarRaton(elEvento) {
@@ -1120,8 +1143,7 @@
         }
     }
 
-    function moverDisparo(disparo)
-    {
+    function moverDisparo(disparo) {
         disparo.style.top = parseInt(disparo.style.top) - 2 + "px";
     }
     // P A R A   T E S T E A R
@@ -1148,6 +1170,11 @@
         var numJugadores = document.getElementById("numJugadores").value;
         var nivel = document.getElementById("nivel").value;
         var nombreJ1 = document.getElementById("nombrej1").value;
+
+        if (numJugadores == 1) {
+
+        }
+
         var nombreJ2 = document.getElementById("nombrej2").value;
 
         juego = new Arkanoid(numJugadores, nivel - 1, false, 3, nombreJ1, nombreJ2);
@@ -1161,6 +1188,27 @@
             setInterval(comprobarPasoNivelJ2, 100);
         }
     }
+    function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        var expires = "expires="+ d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+    function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
 </script>
 
 <body>
