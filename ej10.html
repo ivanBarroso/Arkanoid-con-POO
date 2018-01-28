@@ -140,9 +140,9 @@
         this.pasoX = nuevoPaso;
     }
     Pelota.prototype.ponerEncimaDeBarra = function () {
-        this.divPelota.style.left = window.innerWidth * (this.barra.contenedora.anchoCajaJuego / 100) / 2 - this.barra.anchoBarraPx / 2 + this.barra.anchoBarraPx/2 + "px";
+        this.divPelota.style.left = window.innerWidth * (this.barra.contenedora.anchoCajaJuego / 100) / 2 - this.barra.anchoBarraPx / 2 + this.barra.anchoBarraPx / 2 + "px";
         this.x = parseInt(this.divPelota.style.left);
-        this.divPelota.style.top = window.innerHeight * (this.barra.contenedora.altoCajaJuego / 100) - window.innerHeight * this.barra.altoBarra / 50  - this.barra.altoBarraPx + "px";
+        this.divPelota.style.top = window.innerHeight * (this.barra.contenedora.altoCajaJuego / 100) - window.innerHeight * this.barra.altoBarra / 50 - this.barra.altoBarraPx + "px";
         this.y = parseInt(this.divPelota.style.top);
     }
     // - - - - - F I N    D E    L A   C L A S E    P E L O T A  - - - - - - -
@@ -167,7 +167,7 @@
         this.arrayLadrillos.push(this);
     }
     Ladrillo.prototype.obtenerColor = function () {
-        var arrayColores = ["red", "green", "yellow", "purple"];
+        var arrayColores = ["red", "green", "yellow", "purple", "blue", "grey"];
         return arrayColores[this.vida];
 
     }
@@ -442,23 +442,23 @@
                 posicionInicial += 9;
             }
         }
-    } 
+    }
     Arkanoid.prototype.pintarNivelJ2 = function (nivel) {
-            var posicionInicial = contenedora.posicionX + 1;
-            var separacion = 1;
-            var altoInicial = 3;
-            for (var i = 0; i < niveles[nivel].nivel.length; i++) {
-                for (var j = 0; j < niveles[nivel].nivel[i].linea.length; j++) {
-                    if (posicionInicial + 8 > 100) {
-                        altoInicial += 6;
-                        posicionInicial = contenedora.posicionX + 1;
-                    }
-                    if (niveles[nivel].nivel[i].linea[j] != -1) {
-                        new Ladrillo(8, 5, posicionInicial, altoInicial, niveles[nivel].nivel[i].linea[j], 0, contenedora1, arrayLadrillos2);
-                    }
-                    posicionInicial += 9;
+        var posicionInicial = contenedora.posicionX + 1;
+        var separacion = 1;
+        var altoInicial = 3;
+        for (var i = 0; i < niveles[nivel].nivel.length; i++) {
+            for (var j = 0; j < niveles[nivel].nivel[i].linea.length; j++) {
+                if (posicionInicial + 8 > 100) {
+                    altoInicial += 6;
+                    posicionInicial = contenedora.posicionX + 1;
                 }
+                if (niveles[nivel].nivel[i].linea[j] != -1) {
+                    new Ladrillo(8, 5, posicionInicial, altoInicial, niveles[nivel].nivel[i].linea[j], 0, contenedora1, arrayLadrillos2);
+                }
+                posicionInicial += 9;
             }
+        }
     }
     Arkanoid.prototype.comenzarJuegoJ1 = function () {
         this.intervalo1 = setInterval(function () {
@@ -474,16 +474,13 @@
         //Solo se puede iniciar una vez el juego
         if (!this.iniciado) {
             this.comenzarJuegoJ1();
-            for(var i = 0; i<arrayPelotas1.length; i++)
-            {
+            for (var i = 0; i < arrayPelotas1.length; i++) {
                 arrayPelotas1[i].estaEnMovimiento = true;
             }
-            if(this.numeroJugadores == 2)
-            {
+            if (this.numeroJugadores == 2) {
                 this.comenzarJuegoJ2();
-                for(var i = 0; i<arrayPelotas2.length; i++)
-                {
-                arrayPelotas2[i].estaEnMovimiento = true;
+                for (var i = 0; i < arrayPelotas2.length; i++) {
+                    arrayPelotas2[i].estaEnMovimiento = true;
                 }
             }
             this.iniciado = true;
@@ -539,7 +536,7 @@
 
 
     // - - - - - - - - - -     C L A S E      I N F O R M A C I O N     - - - - - - - - - - - 
-    function Informacion(contenedor1, contenedor2, anchoInformacion, colorFondo, nivelActual, numVidasInicial , nombreJ1, nombreJ2) {
+    function Informacion(contenedor1, contenedor2, anchoInformacion, colorFondo, nivelActual, numVidasInicial, nombreJ1, nombreJ2) {
         this.contenedor1 = contenedor1;
         this.contenedor2 = contenedor2;
         this.altoInformacion = contenedor1.altoCajaJuego;
@@ -699,22 +696,18 @@
             }
         }
     }
-    function comprobarPasoNivelJ1()
-    {
-        if(arrayLadrillos1.length == 0)
-        {
+    function comprobarPasoNivelJ1() {
+        if (arrayLadrillos1.length == 0) {
             juego.nivelJ1++;
             juego.pintarNivelJ1(juego.nivelJ1);
-            juego.informacion.divNivelJ1.innerHTML = juego.nivelJ1+1;
+            juego.informacion.divNivelJ1.innerHTML = juego.nivelJ1 + 1;
         }
     }
-    function comprobarPasoNivelJ2()
-    {
-        if(arrayLadrillos2.length == 0)
-        {
+    function comprobarPasoNivelJ2() {
+        if (arrayLadrillos2.length == 0) {
             juego.nivelJ2++;
             juego.pintarNivelJ2(juego.nivelJ2);
-            juego.informacion.divNivelJ2.innerHTML = juego.nivelJ2+1;
+            juego.informacion.divNivelJ2.innerHTML = juego.nivelJ2 + 1;
         }
     }
     /*
@@ -742,9 +735,9 @@
 
                         setTimeout(function () {
                             cambiarFondoJuego("#000000", pelota.contenedora.divContenedora)
-                            }
-                                , 200
-                            )
+                        }
+                            , 200
+                        )
                         pelota.arrayPelotas.splice(index, 1);
                     }
                     //Si solo queda una pelota en juego
@@ -797,10 +790,10 @@
                                 var index = pelota.arrayPelotas.indexOf(pelota);
                                 borrarElemento(pelota.divPelota);
                                 setTimeout(function () {
-                                cambiarFondoJuego("#000000", pelota.contenedora.divContenedora)
-                            }
-                                , 200
-                            )
+                                    cambiarFondoJuego("#000000", pelota.contenedora.divContenedora)
+                                }
+                                    , 200
+                                )
                                 pelota.arrayPelotas.splice(index, 1);
                                 alert("fin del juego J2")
                             }
@@ -893,8 +886,7 @@
         var evento = window.event || elEvento;
         //Barra espaciadora
         if (evento.charCode == 32) {
-            if(juego.numeroJugadores == 1)
-            {
+            if (juego.numeroJugadores == 1) {
                 juego.iniciarJuego();
             }
         }
@@ -945,26 +937,23 @@
                 break;
             case "h":
             case "H":
-                if(juego.ayudaMostrada)
-                {
+                if (juego.ayudaMostrada) {
                     juego.iniciarJuego();
                     //Ocultar la ayuda
                     document.getElementById("ayudaJ2").style.visibility = "hidden";
                     document.getElementById("ayudaJ1").style.visibility = "hidden";
                     juego.ayudaMostrada = false;
                 }
-                else{
-                    if(juego.numeroJugadores == 1)
-                    {
+                else {
+                    if (juego.numeroJugadores == 1) {
                         document.getElementById("ayudaJ2").style.visibility = "hidden";
                         document.getElementById("ayudaJ1").style.visibility = "visible";
                     }
-                    if(juego.numeroJugadores == 2)
-                    {
+                    if (juego.numeroJugadores == 2) {
                         document.getElementById("ayudaJ2").style.visibility = "visible";
                         document.getElementById("ayudaJ1").style.visibility = "hidden";
                     }
-                
+
                     juego.ayudaMostrada = true;
                 }
                 break;
@@ -1104,26 +1093,22 @@
         contenedora.style.backgroundColor = color;
     }
     //Esta funcion se usa solo si hay un jugador
-    function comprobarRaton(elEvento) 
-    {
+    function comprobarRaton(elEvento) {
         var evento = window.event || elEvento;
         var coordenadaX = evento.clientX;
         var coordenadaY = evento.clientY;
 
-        if (juego.estaEnMovimiento  && juego.numeroJugadores == 1) 
-        {
+        if (juego.estaEnMovimiento && juego.numeroJugadores == 1) {
             //movemos hacia la derecha
-            if(coordenadaX  - barraj1.anchoBarraPx/2 > parseInt(barraj1.divBarra.style.left) + barraj1.pasoBarra)
-            {
-                barraj1.divBarra.style.left = coordenadaX  - barraj1.anchoBarraPx/2 + "px"
+            if (coordenadaX - barraj1.anchoBarraPx / 2 > parseInt(barraj1.divBarra.style.left) + barraj1.pasoBarra) {
+                barraj1.divBarra.style.left = coordenadaX - barraj1.anchoBarraPx / 2 + "px"
             }
             //movemos hacia la derecha
-            else if(coordenadaX  - barraj1.anchoBarraPx/2 < (parseInt(barraj1.divBarra.style.left) - barraj1.pasoBarra))
-            {
-                barraj1.divBarra.style.left = coordenadaX  - barraj1.anchoBarraPx/2 + "px"
+            else if (coordenadaX - barraj1.anchoBarraPx / 2 < (parseInt(barraj1.divBarra.style.left) - barraj1.pasoBarra)) {
+                barraj1.divBarra.style.left = coordenadaX - barraj1.anchoBarraPx / 2 + "px"
             }
-            
-            
+
+
         }
     }
     // P A R A   T E S T E A R
@@ -1144,24 +1129,22 @@
             , 1000);
     }
 
-    function comenzar()
-    {
+    function comenzar() {
         document.getElementById("inicioJuego").style.visibility = "hidden";
-        
+
         var numJugadores = document.getElementById("numJugadores").value;
         var nivel = document.getElementById("nivel").value;
         var nombreJ1 = document.getElementById("nombrej1").value;
         var nombreJ2 = document.getElementById("nombrej2").value;
 
-        juego = new Arkanoid(numJugadores, nivel-1, false, 3, nombreJ1, nombreJ2);
+        juego = new Arkanoid(numJugadores, nivel - 1, false, 3, nombreJ1, nombreJ2);
         //juego.informacion.divJugador1
         document.onkeypress = comprobarTecla;
         document.onmousemove = comprobarRaton;
 
         //juego.iniciarJuego();
         setInterval(comprobarPasoNivelJ1, 100);
-        if(juego.numeroJugadores == 2)
-        {
+        if (juego.numeroJugadores == 2) {
             setInterval(comprobarPasoNivelJ2, 100);
         }
     }
@@ -1175,19 +1158,28 @@
             <img class="tecla" src="keyboard_key_right.png" alt="tecla_izquierda">
             <img class="tecla" src="keyboard_key_left.png" alt="tecla_derecha">
         </div>
-        <div id="infoTeclas"><br><span>Usa las flechas para moverte</span></div>
+        <div id="infoTeclas">
+            <br>
+            <span>Usa las flechas para moverte</span>
+        </div>
         <div class="teclas">
             <img id="teclaEspacio" src="mouse.jpg" alt="tecla_izquierda">
         </div>
-        <div id="infoTeclas"><span>Pulsa la barra espacio para iniciar</span></div>
+        <div id="infoTeclas">
+            <span>Pulsa la barra espacio para iniciar</span>
+        </div>
         <div class="teclas">
             <img class="tecla" src="keyboard_key_p.png" alt="tecla_p">
         </div>
-        <div id="infoTeclas"><span>Tecla P para pausar el juego</span></div>
+        <div id="infoTeclas">
+            <span>Tecla P para pausar el juego</span>
+        </div>
         <div class="teclas">
             <img class="tecla" src="mouse.png" alt="raton">
         </div>
-        <div id="infoTeclas"><span>Puedes mover con el ratón la barra</span></div>
+        <div id="infoTeclas">
+            <span>Puedes mover con el ratón la barra</span>
+        </div>
     </div>
     <div id="ayudaJ2" class="centrar">
         <h1>Como jugar (2 jugadores)</h1>
@@ -1197,58 +1189,70 @@
             <img class="tecla" src="keyboard_key_d.png" alt="tecla_a">
             <img class="tecla" src="keyboard_key_a.png" alt="tecla_d  ">
         </div>
-        <div id="infoTeclas"><span>Usa las teclas a (izquierda) y d (derecha) para moverte</span></div>
+        <div id="infoTeclas">
+            <span>Usa las teclas a (izquierda) y d (derecha) para moverte</span>
+        </div>
         <br>
         <h1>Jugador 2</h1>
         <div class="teclas">
             <img class="tecla" src="keyboard_key_right.png" alt="tecla_izquierda">
             <img class="tecla" src="keyboard_key_left.png" alt="tecla_derecha">
         </div>
-        <div id="infoTeclas"><span>Usa las flechas para moverte</span></div>
+        <div id="infoTeclas">
+            <span>Usa las flechas para moverte</span>
+        </div>
         <div class="teclas">
             <img class="tecla" src="keyboard_key_p.png" alt="tecla_p">
         </div>
-        <div id="infoTeclas"><span>Tecla P para pausar el juego</span></div>
+        <div id="infoTeclas">
+            <span>Tecla P para pausar el juego</span>
+        </div>
         <h1>El juego comienza al cerrar la ayuda, suerte!!!</h1>
     </div>
 
     <div id="inicioJuego" class="inicioJuego">
         <h1>Arkanoid</h1>
         <div class="textos">
-          <h1>Numero de jugadores</h1>
+            <h1>Numero de jugadores</h1>
         </div>
-        <div class="valoresTexto"><br>
-          <select name="numJugadores" id="numJugadores">
-            <option value="1">1</option>
-            <option value="2">2</option>
-          </select>
+        <div class="valoresTexto">
+            <br>
+            <select name="numJugadores" id="numJugadores">
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
         </div>
         <br>
         <div class="textos">
-          <h1>Nivel inicial</h1>
+            <h1>Nivel inicial</h1>
         </div>
-        <div class="valoresTexto"><br>
-          <select name="nivel" id="nivel">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-          </select>
-        </div>
-        <div class="textos">
-          <h1>Nombre j1</h1>
-        </div>
-        <div class="valoresTexto"><br> <input id="nombrej1" type="text"></input>
+        <div class="valoresTexto">
+            <br>
+            <select name="nivel" id="nivel">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+            </select>
         </div>
         <div class="textos">
-          <h1>Nombre j2</h1>
+            <h1>Nombre j1</h1>
         </div>
-        <div class="valoresTexto"><br> <input id="nombrej2" type="text"></input>
-      </div>
-          <button id="botonComenzar" onclick="comenzar()">   Comenzar Juego   </button>
+        <div class="valoresTexto">
+            <br>
+            <input id="nombrej1" type="text"></input>
+        </div>
+        <div class="textos">
+            <h1>Nombre j2</h1>
+        </div>
+        <div class="valoresTexto">
+            <br>
+            <input id="nombrej2" type="text"></input>
+        </div>
+        <button id="botonComenzar" onclick="comenzar()"> Comenzar Juego </button>
         <br>
 </body>
 
